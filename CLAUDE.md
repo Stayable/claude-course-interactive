@@ -45,7 +45,7 @@ Three things the app must do well:
    - **Checks for understanding**: short quizzes (MCQ, fill-in, "fix this prompt") with immediate feedback, not just an end-of-course test.
    - **Apply-it exercises**: a small task the learner completes in the playground and self-checks against a rubric.
 
-3. **Track progress.** Per-course completion %, per-lesson done/not-done, quiz scores, and a resumable "continue where you left off" entry point. Local-first (localStorage/IndexedDB) is acceptable for v1; only add auth + a backend store if the user explicitly asks.
+3. **Track progress.** Per-course completion %, per-lesson done/not-done, quiz scores, and a resumable "continue where you left off" entry point. Progress is stored server-side keyed to the authenticated user (Auth.js + Prisma). An anonymous user can browse but must sign in before progress persists.
 
 ## Tech defaults
 
@@ -56,10 +56,12 @@ Pick these unless the user says otherwise — don't relitigate every session:
 - **Code blocks**: Shiki for syntax highlighting.
 - **Content**: MDX for lesson bodies so diagrams, quizzes, and playground embeds can live inline as components.
 - **Claude API**: `@anthropic-ai/sdk`, called only from Next.js route handlers (`app/api/claude/route.ts`). Stream responses. Default model: latest Sonnet (`claude-sonnet-4-6` at time of writing — bump when newer versions ship, see "Model selection" below).
-- **State**: React Server Components for static content; `zustand` or React context for client-side progress; `localStorage` for persistence in v1.
+- **State**: React Server Components for static content; `zustand` for client-side ephemeral state; server actions + Prisma for progress writes.
+- **Auth**: Auth.js (NextAuth v5) with GitHub OAuth as the default provider. Email magic link can be added later. Session strategy: database (so we can join progress to user).
+- **Database**: Prisma + SQLite locally (`file:./dev.db`), Postgres in prod via `DATABASE_URL`. Schema covers `User`, `Account`, `Session`, `VerificationToken` (Auth.js standard) plus `Progress`, `QuizAttempt`.
 - **Tests**: Vitest for `lib/` (recommender, content loaders). Playwright only if the user asks for E2E.
 
-Avoid: heavy CMS, auth providers, databases, analytics SDKs, animation libraries, or LMS frameworks until explicitly requested. Keep `package.json` small.
+Keep `package.json` small. No CMS, analytics SDKs, animation libraries, or LMS frameworks unless asked.
 
 ## Repo layout (target)
 
@@ -96,9 +98,8 @@ Don't create this whole tree up front — scaffold what each task actually needs
 - **Branch.** All work on `claude/interactive-course-webapp-y3ayM`.
 - **Output style.** Keep components small and prose tight. Lesson copy is plain English, second person, no marketing voice. No emojis unless the user asks.
 
-## Open questions to confirm before major work
+## Locked decisions (do not relitigate)
 
-Ask once, then proceed:
-1. Is local-only progress (localStorage) acceptable for v1, or is auth + sync required?
-2. Should the playground call the real Claude API (needs key + cost) or use canned responses for v1?
-3. Is the live https://claude.com/resources/courses catalog OK to scrape on a build step, or should the catalog be hand-maintained in `courses.json`?
+1. **Progress storage**: Auth + cloud sync via Auth.js + Prisma. No localStorage-only mode.
+2. **Playground**: Real Claude API via server route (`/api/claude`). `ANTHROPIC_API_KEY` server-side only. Rate-limit per session.
+3. **Catalog**: Hand-maintained `content/courses.json`. No build-time scraping of claude.com.

@@ -1,0 +1,83 @@
+# The tool-use loop
+
+Tool use lets Claude call functions you define — to look things up, run code, or take actions. The shape of the interaction is a small loop: you send a message and a list of tools, Claude either replies or asks to call a tool, you run the tool, you send the result back, and Claude continues.
+
+<Callout kind="note">
+This lesson assumes you've made at least one Claude API call. If you haven't, do the **Claude with the Claude API** course first.
+</Callout>
+
+## The loop, drawn
+
+<Diagram
+  takeaway="Tool use is a turn-based loop. You only stop when Claude returns a message with stop_reason='end_turn'."
+  chart={`sequenceDiagram
+    participant U as Your app
+    participant C as Claude
+    participant T as Tool (your code)
+    U->>C: messages + tools[]
+    C-->>U: stop_reason=tool_use, tool_use block
+    U->>T: run tool with input
+    T-->>U: tool result
+    U->>C: append tool_result, send again
+    C-->>U: stop_reason=end_turn, final message`}
+/>
+
+The two states that matter:
+
+- `stop_reason: "tool_use"` — Claude wants you to run a tool. Look at the `tool_use` block, run it, append a `tool_result` to the messages list, and send again.
+- `stop_reason: "end_turn"` — Claude is done. Show the message.
+
+## Defining a tool
+
+A tool is a name, a description, and a JSON schema for its input. Claude reads the description and decides when to call it, so the description is doing real work — write it like documentation, not a label.
+
+```json
+{
+  "name": "get_weather",
+  "description": "Get current weather for a city. Returns temperature in Celsius.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "city": { "type": "string", "description": "City name, e.g. 'Boca Raton'" }
+    },
+    "required": ["city"]
+  }
+}
+```
+
+## Check yourself
+
+<Quiz
+  question="Claude returns a response with stop_reason='tool_use'. What do you do next?"
+  choices={[
+    { text: "Show the response to the user and stop.", explanation: "Claude hasn't finished — it's asking for tool output." },
+    { text: "Run the requested tool, append the result as a tool_result, and call the API again.", correct: true, explanation: "This is the loop." },
+    { text: "Throw an error — tool_use shouldn't appear.", explanation: "It's a normal state when tools are provided." },
+    { text: "Reduce max_tokens and retry.", explanation: "Unrelated to the stop_reason." }
+  ]}
+/>
+
+<Quiz
+  question="Which of these belong in a tool definition?"
+  multi
+  choices={[
+    { text: "A clear description of what the tool does", correct: true },
+    { text: "An input_schema describing the arguments", correct: true },
+    { text: "The implementation function body" },
+    { text: "Your API key" }
+  ]}
+/>
+
+## Try it
+
+Ask Claude to plan how it would use a `get_weather` tool — without actually calling one. This warms you up to how Claude reasons about tool selection.
+
+<Playground
+  label="Plan a tool call"
+  initialPrompt={`I have a tool called get_weather(city: string). A user asks: "Should I bring an umbrella to Boca Raton tomorrow?"\n\nWalk through, in 3-5 short bullets, how you'd decide whether to call the tool and what argument you'd pass. Don't actually call it — just plan.`}
+/>
+
+## What's next
+
+- Add a real tool to your code and run the loop end-to-end.
+- Move on to **Model Context Protocol (MCP)** to see how tools become reusable across apps.

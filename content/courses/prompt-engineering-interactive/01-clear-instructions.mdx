@@ -1,0 +1,58 @@
+# Clear instructions beat clever ones
+
+The single highest-leverage prompt-engineering move is also the most boring: say exactly what you want, in plain language, with the constraints that matter. Cleverness comes later — and only when clarity isn't enough.
+
+## A concrete example
+
+A vague prompt:
+
+```
+Summarize this article.
+```
+
+A clear prompt:
+
+```
+Summarize the article below in 3 bullets, each under 20 words. Lead with the
+main finding. Use plain language a non-expert can follow. If a number is in
+the article, include it.
+```
+
+The second one is longer because it pins down the four things the first one left to chance: length, structure, audience, and what to keep.
+
+<Callout kind="tip">
+When a prompt fails, your first move should be to add a constraint, not to add cleverness.
+</Callout>
+
+## A mental model
+
+<Diagram
+  takeaway="Every prompt makes implicit choices about role, task, format, and constraints. Make them explicit and quality goes up."
+  chart={`flowchart LR
+    A[Role<br/>who is Claude?] --> P[Prompt]
+    B[Task<br/>what to do] --> P
+    C[Format<br/>how to return] --> P
+    D[Constraints<br/>limits and rules] --> P
+    P --> O[Output]`}
+/>
+
+## Check yourself
+
+<Quiz
+  question="Which prompt is most likely to give consistent output across runs?"
+  choices={[
+    { text: "Write something nice about our product." },
+    { text: "Write a 2-sentence product blurb for a landing page hero. Audience: small-business owners. Tone: direct, no marketing jargon. Avoid superlatives.", correct: true, explanation: "Pins down length, audience, tone, and what to avoid." },
+    { text: "Be creative and surprise me with marketing copy." },
+    { text: "Write copy. Make it good." }
+  ]}
+/>
+
+## Try it
+
+Take a vague prompt and rewrite it with role, task, format, and constraints made explicit. Then run both and compare.
+
+<Playground
+  label="Rewrite a vague prompt"
+  initialPrompt={`Rewrite this vague prompt to be specific about role, task, format, and constraints. Show the rewritten prompt only — no explanation.\n\nVague prompt: "Help me write an email to my landlord about the broken AC."`}
+/>

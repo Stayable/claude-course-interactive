@@ -1,0 +1,169 @@
+{
+  "$schema": "./courses.schema.json",
+  "lastSynced": "2026-05-08",
+  "sourceNote": "Hand-maintained from https://claude.com/resources/courses. Verify before relying on entries marked status='unverified'.",
+  "courses": [
+    {
+      "id": "ai-fluency",
+      "title": "AI Fluency: Foundations",
+      "url": "https://claude.com/resources/courses",
+      "audience": ["general", "business-user"],
+      "level": "beginner",
+      "durationMinutes": 60,
+      "topics": ["ai-fluency", "prompting"],
+      "prerequisites": [],
+      "summary": "Plain-English foundations for working with Claude — what it is, what it can and can't do, and how to ask for what you want.",
+      "learningObjectives": [
+        "Describe what an LLM is in non-technical terms",
+        "Recognize where Claude fits a task vs. where it doesn't",
+        "Write a clear, well-scoped prompt",
+        "Spot common failure modes (hallucination, drift, refusal)"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "claude-with-the-api",
+      "title": "Claude with the Claude API",
+      "url": "https://claude.com/resources/courses",
+      "audience": ["developer"],
+      "level": "beginner",
+      "durationMinutes": 90,
+      "topics": ["api", "prompting"],
+      "prerequisites": [],
+      "summary": "Developer onboarding to the Claude API — auth, requests, streaming, parameters.",
+      "learningObjectives": [
+        "Authenticate and make a first API call",
+        "Use system prompts and message structure correctly",
+        "Stream responses",
+        "Tune temperature, max_tokens, and stop sequences"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "prompt-engineering-interactive",
+      "title": "Prompt Engineering Interactive Tutorial",
+      "url": "https://claude.com/resources/courses",
+      "audience": ["developer", "technical-builder"],
+      "level": "beginner",
+      "durationMinutes": 120,
+      "topics": ["prompting", "api"],
+      "prerequisites": ["claude-with-the-api"],
+      "summary": "Hands-on tutorial covering core prompt-engineering techniques with Claude.",
+      "learningObjectives": [
+        "Apply role prompting and clear instructions",
+        "Use examples (few-shot) effectively",
+        "Structure complex prompts with XML tags",
+        "Chain prompts for multi-step problems"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "real-world-prompting",
+      "title": "Real-World Prompting",
+      "url": "https://claude.com/resources/courses",
+      "audience": ["developer", "technical-builder", "business-user"],
+      "level": "intermediate",
+      "durationMinutes": 90,
+      "topics": ["prompting"],
+      "prerequisites": ["prompt-engineering-interactive"],
+      "summary": "Apply prompting techniques to production-style problems: extraction, classification, summarization, drafting.",
+      "learningObjectives": [
+        "Design prompts that survive messy real input",
+        "Reduce hallucination with grounding and citations",
+        "Iterate prompts using small evaluation sets",
+        "Decide when to use a system prompt vs. user content"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "prompt-evaluations",
+      "title": "Prompt Evaluations",
+      "url": "https://claude.com/resources/courses",
+      "audience": ["developer", "technical-builder"],
+      "level": "intermediate",
+      "durationMinutes": 90,
+      "topics": ["evals", "prompting"],
+      "prerequisites": ["real-world-prompting"],
+      "summary": "Build evaluation sets to measure prompt quality and catch regressions.",
+      "learningObjectives": [
+        "Construct a small but useful eval set",
+        "Choose between exact-match, model-graded, and human grading",
+        "Track regressions across prompt iterations",
+        "Wire evals into a deployment workflow"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "tool-use",
+      "title": "Tool Use with Claude",
+      "url": "https://claude.com/resources/courses",
+      "audience": ["developer"],
+      "level": "intermediate",
+      "durationMinutes": 90,
+      "topics": ["tool-use", "api", "agents"],
+      "prerequisites": ["prompt-engineering-interactive"],
+      "summary": "Give Claude tools (functions) it can call to take actions and fetch data.",
+      "learningObjectives": [
+        "Define a tool schema Claude understands",
+        "Handle the request → tool_use → tool_result loop",
+        "Run multiple tools in parallel safely",
+        "Debug when Claude picks the wrong tool"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "mcp",
+      "title": "Model Context Protocol (MCP)",
+      "url": "https://claude.com/resources/courses",
+      "audience": ["developer", "technical-builder"],
+      "level": "intermediate",
+      "durationMinutes": 90,
+      "topics": ["mcp", "tool-use", "agents"],
+      "prerequisites": ["tool-use"],
+      "summary": "Connect Claude to external systems with MCP — the open protocol for tools, resources, and prompts.",
+      "learningObjectives": [
+        "Explain how MCP clients and servers communicate",
+        "Build a simple MCP server",
+        "Expose tools, resources, and prompts",
+        "Use an MCP server from a Claude client"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "claude-code",
+      "title": "Claude Code in Action",
+      "url": "https://claude.com/resources/courses",
+      "audience": ["developer"],
+      "level": "beginner",
+      "durationMinutes": 90,
+      "topics": ["claude-code"],
+      "prerequisites": [],
+      "summary": "Use Claude Code as a coding agent in the terminal, IDE, and on the web.",
+      "learningObjectives": [
+        "Run Claude Code on a real codebase",
+        "Use slash commands, hooks, and CLAUDE.md effectively",
+        "Set up MCP servers for project-specific tools",
+        "Review and commit AI-generated changes safely"
+      ],
+      "status": "unverified"
+    },
+    {
+      "id": "building-agents",
+      "title": "Building Agents with Claude",
+      "url": "https://claude.com/resources/courses",
+      "audience": ["developer", "technical-builder"],
+      "level": "advanced",
+      "durationMinutes": 120,
+      "topics": ["agents", "tool-use", "mcp"],
+      "prerequisites": ["tool-use", "mcp"],
+      "summary": "Design multi-step agents that plan, use tools, and recover from failure.",
+      "learningObjectives": [
+        "Pick the right agent loop shape for your task",
+        "Manage context and memory across steps",
+        "Add guardrails and human-in-the-loop checkpoints",
+        "Evaluate agent reliability"
+      ],
+      "status": "unverified"
+    }
+  ]
+}
