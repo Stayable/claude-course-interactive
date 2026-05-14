@@ -78,9 +78,9 @@ It hits: role (1), task context (2), input data with clear tags (6), rules + out
   initialPrompt={`You are a careful assistant. Answer the user's question using ONLY the provided documents. If the documents don't contain the answer, say so.
 
 <documents>
-<document id="1">The Stayable property at 2295 Kissimmee East was acquired in Q1 2023. It has 142 rooms and operates as an extended-stay format.</document>
-<document id="2">Stayable's Lakeland property (ID 4645) was acquired in Q3 2023 with 110 rooms. The market is dominated by long-stay business travelers.</document>
-<document id="3">Stayable operates 8 properties across Florida as of 2026.</document>
+<document id="1">The Maple Branch of Northwood Public Library opened in 2018 and has 142 study seats. It functions as the system's main research branch.</document>
+<document id="2">The Oak Branch opened in 2020 with 110 study seats. It specializes in children's programming and weekend community events.</document>
+<document id="3">Northwood Public Library operates 8 branches across the county as of 2026.</document>
 </documents>
 
 First, extract any quotes from the documents relevant to the question into <quotes></quotes> tags, each prefixed with [id=N].
@@ -89,7 +89,7 @@ If there are no relevant quotes, write "no relevant quotes found".
 
 Then, write your answer in <answer></answer> tags. Cite documents inline like [1] or [2].
 
-<question>How many rooms does the Lakeland property have?</question>`}
+<question>How many study seats does the Oak Branch have?</question>`}
   prefill="<quotes>"
 />
 

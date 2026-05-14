@@ -6,7 +6,7 @@ End-to-end walkthrough. Estimated time: 15 minutes the first time, 30 seconds af
 
 - A Vercel account ([vercel.com](https://vercel.com))
 - A Neon account ([neon.tech](https://neon.tech)) — free tier is enough
-- The repo pushed to GitHub (`github.com/stayable/claude-course-interactive`)
+- The repo pushed to GitHub (`github.com/<your-github-account>/claude-course-interactive`) — currently at `github.com/Stayable/claude-course-interactive` until moved
 - An Anthropic API key
 
 ## Step 1 — Create a Neon Postgres database
@@ -33,7 +33,7 @@ End-to-end walkthrough. Estimated time: 15 minutes the first time, 30 seconds af
 ## Step 3 — Import the repo into Vercel
 
 1. Go to [vercel.com/new](https://vercel.com/new).
-2. Find `stayable/claude-course-interactive` in the GitHub list, click **Import**.
+2. Find `<your-github-account>/claude-course-interactive` in the GitHub list, click **Import**.
 3. Framework Preset: should auto-detect **Next.js**.
 4. **Environment Variables** — add these (don't deploy yet):
    - `ANTHROPIC_API_KEY` → your Anthropic key
