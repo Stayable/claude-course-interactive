@@ -1,33 +1,63 @@
 export type Audience =
+  | "general"
   | "developer"
-  | "technical-builder"
-  | "business-user"
-  | "admin"
-  | "general";
+  | "education"
+  | "business"
+  | "nonprofit";
 
 export type Level = "beginner" | "intermediate" | "advanced";
 
-export type Topic =
-  | "prompting"
-  | "tool-use"
-  | "mcp"
-  | "agents"
+export type Category =
+  | "claude-ai"
+  | "claude-cowork"
   | "claude-code"
-  | "evals"
+  | "ai-fluency"
+  | "claude-platform"
+  | "mcp";
+
+export type Topic =
+  | "claude-ai"
+  | "claude-cowork"
+  | "claude-code"
+  | "subagents"
+  | "agent-skills"
+  | "mcp"
   | "api"
-  | "ai-fluency";
+  | "bedrock"
+  | "vertex"
+  | "ai-fluency"
+  | "ai-capabilities"
+  | "educators"
+  | "students"
+  | "nonprofit"
+  | "small-business";
+
+export type CourseSource = "skilljar" | "anthropic-github";
+
+export interface Attribution {
+  creator: string;
+  originalUrl: string;
+  license: string;
+  licenseUrl: string;
+  notes?: string;
+}
 
 export interface Course {
   id: string;
   title: string;
   url: string;
+  source: CourseSource;
+  category: Category;
   audience: Audience[];
   level: Level;
+  lectureCount: number;
   durationMinutes: number;
+  quizCount: number;
   topics: Topic[];
   prerequisites: string[];
   summary: string;
   learningObjectives: string[];
+  attribution?: Attribution;
   status?: "verified" | "unverified" | "draft";
 }
 
@@ -39,10 +69,10 @@ export interface Catalog {
 
 export type Goal =
   | "use-claude-day-to-day"
+  | "ship-with-claude-code"
   | "build-with-api"
-  | "build-agents"
-  | "ship-claude-code"
-  | "evaluate-and-deploy";
+  | "learn-mcp"
+  | "teach-ai-fluency";
 
 export interface UserProfile {
   role: Audience;

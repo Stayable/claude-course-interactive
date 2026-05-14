@@ -1,0 +1,100 @@
+# Research mode for deep dives
+
+A normal Claude reply takes a few seconds. **Research mode** takes minutes. It's a different gear — for questions where the right answer requires Claude to look in many places, follow leads, and *iterate* on its own findings before answering you.
+
+Use it when the question is too big for one round-trip.
+
+<Diagram
+  takeaway="Research mode runs a small investigation. You hand it a question; it returns a report with sources."
+  chart={`flowchart TB
+    Q[Your question] --> Plan["1\\. Plan<br/>Break the question into sub-questions"]
+    Plan --> Search["2\\. Search<br/>Pull from the web and any connected sources"]
+    Search --> Read["3\\. Read<br/>Skim each result, follow promising leads"]
+    Read --> Check{"More to chase?"}
+    Check -->|yes| Search
+    Check -->|no| Synth["4\\. Synthesize<br/>Reconcile findings, note conflicts"]
+    Synth --> Report["Report with citations"]`}
+/>
+
+## When to reach for it
+
+<Compare
+  leftLabel="Research mode is worth it for..."
+  rightLabel="A normal chat is faster for..."
+  left={[
+    "'What are the trade-offs of the three leading approaches to X, with current sources?'",
+    "'Build me a competitor landscape — who's in this space, what they charge, what each is good at.'",
+    "'Get me up to speed on regulation Y as of this year — what's changed, who's affected.'",
+    "'Investigate why our metric dropped in the Acme region last month — pull from the dashboards we have connected.'"
+  ]}
+  right={[
+    "'Define X in one sentence.'",
+    "'Summarize this article I'm pasting.'",
+    "'Help me word this email.'",
+    "'Walk me through this code.'"
+  ]}
+  takeaway="Research mode trades speed for thoroughness. Match the gear to the question."
+/>
+
+## What you get back
+
+A research run usually ends with three things:
+
+1. **A short answer** — Claude's best read of the question, up front.
+2. **The body** — the reasoning, organized into sections.
+3. **Sources** — links to every page, doc, or thread that fed into the answer.
+
+The sources are the most important part. They let you check Claude's work and dig further on the parts that matter to *you*, not just the parts Claude found interesting.
+
+## Asking research-mode questions well
+
+A short framing list:
+
+- **State the question once, plainly.** No need to oversell it.
+- **Say what you'll *do* with the answer.** "I'm comparing options for a build-vs-buy decision next week." That shapes the depth and the structure.
+- **Bound the scope.** Time window, geography, segment — whatever applies. "U.S. only, last 12 months."
+- **Say what you already know.** Saves Claude from re-discovering the basics.
+
+## Check yourself
+
+<Quiz
+  question="You need to decide between three project-management tools by Friday for a 40-person org. Research mode or a normal chat?"
+  choices={[
+    { text: "Normal chat — Claude will know the answer fast." },
+    { text: "Research mode — you want a comparison with current sources and trade-offs.", correct: true, explanation: "Comparison + current facts + sources = research mode." },
+    { text: "Skip Claude, ask a friend." },
+    { text: "Both, simultaneously." }
+  ]}
+/>
+
+<Quiz
+  question="What ships back at the end of a research run?"
+  multi
+  choices={[
+    { text: "A short summary answer at the top", correct: true },
+    { text: "The reasoning broken into sections", correct: true },
+    { text: "A list of cited sources", correct: true },
+    { text: "An invoice for compute time" }
+  ]}
+/>
+
+## Try it
+
+This playground is a regular chat — research mode runs in the Claude app, not here. But you can practice *framing* a good research question and see how Claude would scope it.
+
+<Playground
+  label="Frame a research question"
+  initialPrompt={`You're an AI research strategist. Below is a question I might ask in Research mode.
+
+Tell me:
+1. What sub-questions you'd break it into.
+2. What sources you'd want to consult.
+3. What "done" looks like for the final report.
+
+Question:
+"What are the realistic options for a 25-person nonprofit to adopt AI tools this year, what would each cost, and what are the main risks?"`}
+/>
+
+## What's next
+
+Next: **Claude in action: use-cases by role** — what the day-to-day looks like in different jobs.

@@ -1,0 +1,94 @@
+# Claude in action: use-cases by role
+
+Everything you've learned so far is the toolkit. This lesson is the *playbook*: what a productive day with Claude actually looks like in different jobs.
+
+Click a role to see typical use cases. None of these are exotic — they're the daily-work stuff people end up doing once Claude is on their desk.
+
+<RoleSwitcher
+  takeaway="Different jobs lean on different surfaces and patterns, but the underlying moves are the same."
+  roles={[
+    {
+      name: "Marketing",
+      scenarios: [
+        "Rewrite a 3-paragraph announcement into a one-tweet, one-LinkedIn-post, and a 200-word blog teaser — keeping the same facts, three voices.",
+        "Pull a quarter's worth of campaign performance from connected dashboards and draft the wrap-up memo (in a Project with last quarter's wrap-up as a style example).",
+        "Draft 10 ad variations from one brief, then ask Claude to flag which ones make the same claim in different words."
+      ]
+    },
+    {
+      name: "Engineering",
+      scenarios: [
+        "Open Claude Code on a repo, paste the bug report, let Claude reproduce and propose a fix with a test that catches the regression.",
+        "Have Claude review your pull request before a teammate does — focus on logic, not style — and respond to the comments.",
+        "Use Cowork to refactor a config file across 20 services consistently, with a diff you approve before each save."
+      ]
+    },
+    {
+      name: "Operations",
+      scenarios: [
+        "Paste in a messy supplier email and ask Claude to extract every commitment and date into a clean table.",
+        "Build a runbook from a transcript: 'Here's a recording of how we onboard a new vendor. Turn it into a checklist with owners and timing.'",
+        "Compare three vendor proposals side-by-side — same questions, same format, with the discrepancies flagged."
+      ]
+    },
+    {
+      name: "Sales",
+      scenarios: [
+        "Pull every prior interaction with an account from CRM + email + Slack into a one-page pre-call brief.",
+        "Rewrite a generic outreach email so it sounds specific to this prospect, using three things from their public footprint.",
+        "Convert a 45-minute discovery call transcript into a structured summary: pains, decision criteria, next step, who's in the room."
+      ]
+    },
+    {
+      name: "HR / People",
+      scenarios: [
+        "Draft a job description from a hiring manager's brain-dump — three rounds of trimming so it reads like a person, not a posting bot.",
+        "Pull common themes from an engagement-survey free-text field without ever exposing any single response.",
+        "Build a manager-prep brief for a hard conversation: timeline of events, what's documented, what to ask first."
+      ]
+    },
+    {
+      name: "Finance",
+      scenarios: [
+        "Drop a board pack into Claude and ask: 'Compare this quarter's commentary to last quarter's — what's a real change vs. a re-phrased fact?'",
+        "Reconcile two spreadsheets with different column orders and naming — Claude maps them and flags rows that don't match.",
+        "Draft an investor memo from a finance brief + last memo as the style example — keeping numbers exact."
+      ]
+    },
+    {
+      name: "Legal",
+      scenarios: [
+        "First-pass redline of a routine NDA against your template — Claude flags every deviation; you decide which to push back on.",
+        "Pull every commitment, deadline, and termination clause from a stack of vendor contracts into one table.",
+        "Plain-language summary of a 60-page agreement for an internal partner — Claude shows you which exact clause each sentence came from."
+      ]
+    }
+  ]}
+/>
+
+## A pattern that shows up everywhere
+
+Notice what these have in common:
+
+1. **Real material goes in.** Pasted, attached, or pulled via a connector. Not described.
+2. **The output has a clear shape.** A table, a draft, a checklist, a memo — not "thoughts about."
+3. **Claude does the heavy reading.** You do the deciding.
+4. **You verify the parts that matter.** Especially numbers, names, dates, and any cited source.
+
+If your use case follows that shape, it'll probably work. If it doesn't, that's usually where things slip.
+
+## Check yourself
+
+<Quiz
+  question="Which of these is the strongest fit for Claude's strengths?"
+  choices={[
+    { text: "Pasting a 30-page contract and asking for the commitments, deadlines, and termination clauses in a table.", correct: true, explanation: "Real material in, clear-shaped output, Claude does the reading, you verify the table." },
+    { text: "Asking 'is our pricing strategy good?' with no documents attached." },
+    { text: "Asking Claude for today's stock prices with no connector." },
+    { text: "Pasting one sentence and asking for 5,000 words of related thinking." }
+  ]}
+/>
+
+## What's next
+
+Next: **Other ways to work with Claude** — mobile, voice, API, and the surfaces that didn't get their own lesson.

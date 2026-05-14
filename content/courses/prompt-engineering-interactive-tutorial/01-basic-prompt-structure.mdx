@@ -1,0 +1,132 @@
+# Chapter 1: Basic prompt structure
+
+A call to the Claude Messages API has three required pieces and a few useful optional ones. Once you've seen them once, every prompt you'll ever write is a variation on this skeleton.
+
+## The required pieces
+
+<Diagram
+  takeaway="Three pieces are required: model, max_tokens, messages. The messages array alternates user/assistant turns, starting with user."
+  chart={`flowchart LR
+    API[messages.create] --> M[model]
+    API --> T[max_tokens]
+    API --> Msgs[messages array]
+    API -.-> Sys[system prompt]
+    API -.-> Temp[temperature]
+    Msgs --> U1[user]
+    Msgs --> A1[assistant]
+    Msgs --> U2[user]
+    Msgs --> A2[...]`}
+/>
+
+- **`model`** — the model id (e.g. `claude-sonnet-4-6`).
+- **`max_tokens`** — a hard cap on how many tokens Claude will generate. Set it high enough that you don't get cut off mid-sentence.
+- **`messages`** — an alternating list of `{role: "user" | "assistant", content: "..."}`. The **first** message must be `user`. Roles must alternate (no two user messages in a row).
+
+Optional but high-leverage:
+
+- **`system`** — a separate parameter (not a message) that gives Claude context, persona, or rules *before* the conversation starts.
+- **`temperature`** — variability in the reply. `0` is deterministic-ish; higher means more variation. For learning, start at `0`.
+
+## A first request
+
+Below is exactly the shape of a minimal call.
+
+```python
+client.messages.create(
+    model="claude-sonnet-4-6",
+    max_tokens=2000,
+    temperature=0.0,
+    system="",
+    messages=[
+        {"role": "user", "content": "Hi Claude, how are you?"}
+    ]
+)
+```
+
+The playground in this lesson is wired to the same API on the server. Run it.
+
+<Playground
+  label="A first conversation"
+  initialPrompt="Hi Claude, how are you?"
+/>
+
+<Playground
+  label="A simple factual question"
+  initialPrompt="Can you tell me the color of the ocean?"
+/>
+
+## Common malformed prompts
+
+Two failure modes catch most newcomers. Both will error out before Claude even sees the message.
+
+<Compare
+  leftLabel="❌ Malformed"
+  rightLabel="✅ Fixed"
+  left={[
+    "messages: [{\"Hi Claude, how are you?\"}] — no role/content keys",
+    "messages: [user, user, user] — two user turns in a row, no alternation",
+    "messages: [assistant, user, ...] — must start with user"
+  ]}
+  right={[
+    "messages: [{role: \"user\", content: \"Hi Claude\"}]",
+    "messages: [user, assistant, user, ...] — strict alternation",
+    "messages: [user, assistant, user, ...] — always start with user"
+  ]}
+  takeaway="Every message needs role + content. The array starts with user and alternates."
+/>
+
+## System prompts
+
+A system prompt lives outside the `messages` array. It sets the stage: *who* Claude is and *how* it should respond. The same user message can produce wildly different replies depending on the system prompt.
+
+<Playground
+  label="No system prompt — straight answer"
+  initialPrompt="Why is the sky blue?"
+/>
+
+<Playground
+  label="With system prompt — Socratic questioning"
+  system="Your answer should always be a series of critical thinking questions that further the conversation (do not provide answers to your questions). Do not actually answer the user question."
+  initialPrompt="Why is the sky blue?"
+/>
+
+The user message is identical. The system prompt changes everything.
+
+## Exercises
+
+<Callout kind="tip">
+**Exercise 1.1 — Counting to three.** Get Claude to count to three. The output needs to contain the digits **1**, **2**, and **3**. You can solve this just by asking clearly.
+</Callout>
+
+<Playground
+  label="Exercise 1.1: Counting to three"
+  initialPrompt="[Replace this — get Claude to count to three]"
+/>
+
+<Quiz
+  question="What's the simplest correct prompt for Exercise 1.1?"
+  choices={[
+    { text: "'Count from one to three.'", correct: true, explanation: "Just ask. Claude is built to follow direct instructions." },
+    { text: "'Please please please count.'" },
+    { text: "'Mathematically derive the sequence (1,2,3).'" },
+    { text: "'List the first three Arabic numerals as integer values.'" }
+  ]}
+/>
+
+<Callout kind="tip">
+**Exercise 1.2 — System prompt for a 3-year-old.** Set the **system prompt** so that Claude answers "How big is the sky?" like a 3-year-old child would. The output should contain something like "soo" or "giggles".
+</Callout>
+
+<Playground
+  label="Exercise 1.2: System prompt persona"
+  system="[Replace this system prompt to make Claude reply like a 3-year-old]"
+  initialPrompt="How big is the sky?"
+/>
+
+## What's next
+
+Next: **Being clear and direct** — the single highest-leverage prompting move.
+
+<Attribution
+  originalUrl="https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial"
+/>

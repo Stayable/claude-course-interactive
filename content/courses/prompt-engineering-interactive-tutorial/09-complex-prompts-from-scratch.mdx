@@ -1,0 +1,117 @@
+# Chapter 9: Complex prompts from scratch
+
+Everything in chapters 1–8 has been a single technique. Real production prompts stack them. This chapter is the **assembly diagram**: ten elements you can mix and match to build a prompt from a blank page.
+
+Not every prompt needs all ten. Start with all of them, get the prompt working, then trim what doesn't earn its place.
+
+## The 10-element template
+
+<Diagram
+  takeaway="Order matters. Context up top, the user's question and immediate ask down low, prefill at the very end."
+  chart={`flowchart TB
+    E1["1. user role<br/>(messages always start with user)"]
+    E2["2. Task context<br/>(who Claude is, what it's doing)"]
+    E3["3. Tone context<br/>(voice, register, formality)"]
+    E4["4. Detailed task rules<br/>(constraints + 'I don't know' out)"]
+    E5["5. Examples<br/>(few-shot)"]
+    E6["6. Input data<br/>(<doc>, <email>, etc.)"]
+    E7["7. Immediate task<br/>(restate the ask)"]
+    E8["8. Precognition<br/>('think step by step in <scratchpad>')"]
+    E9["9. Output formatting<br/>(structure, tags, format)"]
+    E10["10. Prefill<br/>(assistant turn starts...)"]
+    E1 --> E2 --> E3 --> E4 --> E5 --> E6 --> E7 --> E8 --> E9 --> E10`}
+/>
+
+## The elements, one line each
+
+1. **`user` role.** The first message in `messages` must always be `role: "user"`.
+2. **Task context.** "You are a [role] helping a user [do thing]." Establishes purpose.
+3. **Tone context.** "Reply in plain English, warm and direct, no marketing voice." Optional, but cheap and effective.
+4. **Detailed task description & rules.** What Claude should do, what it shouldn't, and *what to do if it doesn't know*. This is where the "give Claude an out" rule lives.
+5. **Examples.** Two or three concrete (input, ideal output) pairs in `<example>` tags. The single highest-leverage element on accuracy.
+6. **Input data.** The actual thing being processed, wrapped in descriptive tags like `<document>`, `<email>`, `<transcript>`.
+7. **Immediate task.** Restate the ask, especially in long prompts. *"Here is the user's question: …"* near the bottom works better than at the top.
+8. **Precognition.** "Before answering, think step by step in `<scratchpad>` tags." Forces visible reasoning.
+9. **Output formatting.** "Wrap the final answer in `<answer>` tags." Or specify JSON keys, table columns, length limits.
+10. **Prefill.** Put text in the `assistant` turn so Claude continues from it. The cleanest way to lock format.
+
+## Where each element earns its place
+
+<Compare
+  leftLabel="When you need it"
+  rightLabel="When you can skip it"
+  left={[
+    "Element 4 (rules + out): any factual or classification task",
+    "Element 5 (examples): any structured output",
+    "Element 6 (input data): any task on real content (doc, email, transcript)",
+    "Element 8 (precognition): anything requiring multi-step reasoning",
+    "Element 9 (output formatting): any prompt whose output downstream code will parse",
+    "Element 10 (prefill): when format conformance matters most"
+  ]}
+  right={[
+    "Element 3 (tone): casual one-shot prompts",
+    "Element 5 (examples): trivial one-line asks",
+    "Element 6 (input data): pure-knowledge questions",
+    "Element 8 (precognition): single-fact lookups",
+    "Element 10 (prefill): when Claude already nails the format"
+  ]}
+  takeaway="The template is a checklist. Use what the task needs; trim what it doesn't."
+/>
+
+## A full example: career-coach chatbot
+
+Here's a prompt with all ten elements assembled. Read it once, then run it.
+
+<Playground
+  label="Career coach with all 10 elements"
+  system={`You are an AI career coach named Joe created by the company AdAstra Careers. Your goal is to give career advice to users. You will be replying to users who are on the AdAstra Careers website and will be confused if you don't respond in the character of Joe.
+
+You should maintain a friendly customer-service tone.
+
+Here are some important rules for the interaction:
+- Always stay in character, as Joe, an AI from AdAstra Careers.
+- If you are unsure how to respond, say "Sorry, I didn't understand that. Could you rephrase your question?"
+- If someone asks something irrelevant, say "Sorry, I am Joe and I give career advice. Do you have a career question today I can help you with?"
+
+Here is an example of how to respond in a standard interaction:
+<example>
+User: Hi, how were you created and what do you do?
+Joe: Hello! My name is Joe, and I was created by AdAstra Careers to give career advice. What can I help you with today?
+</example>
+
+When you reply, first find exact quotes in the FAQ relevant to the user's question and write them down word for word inside <thinking></thinking> XML tags. This is a space for you to write down relevant content and will not be shown to the user. Then put your reply to the user inside <answer></answer> XML tags.`}
+  initialPrompt={`Here is the user's question: <question>I want to switch from marketing to product management. Where do I start?</question>
+
+How do you respond?`}
+  prefill="<thinking>"
+/>
+
+The prompt hits eight of the ten elements: role, task context, tone, rules + out, example, input data, immediate ask, precognition (thinking tags), output format (answer tags), and prefill. The result is a far more reliable chatbot than the same question with no scaffolding.
+
+## Exercises
+
+<Callout kind="tip">
+**Exercise 9.1 — Tax accountant.** Build a complex prompt that answers tax-law questions using a provided code snippet, citing exact passages and declining when the answer isn't supported. Use elements 2 (role), 4 (rules + out), 6 (input data: `<docs>`), 8 (extract `<quotes>`), 9 (`<answer>` tags).
+</Callout>
+
+<Callout kind="tip">
+**Exercise 9.2 — Socratic code reviewer.** Build a prompt where Claude finds issues in user-submitted code but **doesn't fix them** — instead, Claude invites the user to write a revised version. Use elements 2 (role: "Socratic tutor"), 4 (rules: "do not give the answer"), 5 (one full example), 6 (`<code>` tag), 9 (`<issues>` and `<response>` tags).
+</Callout>
+
+<Quiz
+  question="Where does the user's actual question usually belong in a long prompt?"
+  choices={[
+    { text: "At the very top, before any context." },
+    { text: "Near the bottom, just before the output-format and prefill elements.", correct: true, explanation: "Long prompts work better when the immediate ask is near the end — Claude's attention gravitates there." },
+    { text: "It doesn't matter where." },
+    { text: "Split it in half across the prompt." }
+  ]}
+/>
+
+## What's next
+
+Next: the **appendix** — three more advanced techniques: chaining, tool use, and search/retrieval.
+
+<Attribution
+  originalUrl="https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial"
+/>

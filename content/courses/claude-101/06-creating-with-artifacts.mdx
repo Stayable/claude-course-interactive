@@ -1,0 +1,95 @@
+# Creating with artifacts
+
+Sometimes the answer is a sentence. Sometimes it's a *thing* — a document, a piece of code, a chart, a webpage. When the output is a thing, Claude can put it in its own panel next to the chat: an **artifact**.
+
+You keep talking in the chat. The artifact updates in place. You can copy it, download it, or hand it to someone.
+
+<Diagram
+  takeaway="The chat stays a conversation. The artifact stays a working document. Updates flow between them."
+  chart={`flowchart LR
+    You["Your messages"] --> Chat
+    Chat --> Claude
+    Claude -->|short reply| Chat
+    Claude -->|long output| Artifact
+    Artifact -.->|you ask for changes| Chat
+    Chat -.->|Claude edits| Artifact`}
+/>
+
+## When Claude pops an artifact
+
+Claude reaches for an artifact when the output is:
+
+- **Longer than a few paragraphs** and you'll want to read or edit it as one piece
+- **Self-contained** — a draft, a script, a single HTML page, a structured outline
+- **Something you'll likely revise** — a resume, a proposal, a piece of code
+
+You can also ask for one explicitly: *"Put this in an artifact."* Or the opposite: *"Just answer in the chat — no artifact."*
+
+## What artifacts are good for
+
+<Compare
+  leftLabel="Great as an artifact"
+  rightLabel="Better in the chat"
+  left={[
+    "A 1-page resume you'll iterate on",
+    "A code snippet you'll paste into your project",
+    "A working HTML page you can preview",
+    "A long email draft",
+    "An outline you'll restructure a few times"
+  ]}
+  right={[
+    "A quick fact-check ('what's the capital of Mongolia?')",
+    "A short answer to a yes/no question",
+    "Brainstorming a list of taglines you'll glance at once",
+    "Math or reasoning steps you're reading along with"
+  ]}
+  takeaway="Artifacts are for outputs you'll touch again. Chat is for outputs you'll glance at and move on."
+/>
+
+## Working an artifact
+
+The flow is small and worth getting muscle memory for:
+
+1. **Ask** for the thing. *"Draft a one-page proposal for…"*
+2. **Read** it in the artifact panel.
+3. **Talk** to the chat about what to change. *"Cut the intro. Move the budget table up. Make the tone less formal."*
+4. **Watch** the artifact update in place.
+5. **Copy or download** when it's right.
+
+You don't need to repaste the document each round. Claude is editing the artifact directly.
+
+## A small example
+
+<TypingDemo
+  prompt={`Make an artifact: a one-page HTML resume for "Jordan Lee — senior product designer, 9 years, ex-Figma." Two columns. Restrained design — no rainbow gradients.`}
+  response={`Sure — I'll open an artifact with a clean two-column resume. Header with name, role, and a one-line summary. Left column: experience and projects. Right column: skills, tools, and education. Neutral palette, single accent color, system fonts. Ready for you in the panel — tell me what to tighten.`}
+/>
+
+(That's the *chat* side of the reply. The actual one-page resume lives in the artifact panel next to it.)
+
+## Check yourself
+
+<Quiz
+  question="You ask Claude for 'a 3-sentence description of our new feature.' Should Claude open an artifact?"
+  choices={[
+    { text: "Yes — every output gets one." },
+    { text: "Probably not — 3 sentences belongs in the chat.", correct: true, explanation: "Artifacts are for longer, reusable outputs. Three sentences fits in a reply." },
+    { text: "Yes — artifacts make any output look more professional." },
+    { text: "Only if you ask in a formal voice." }
+  ]}
+/>
+
+<Quiz
+  question="What can you do with an artifact once Claude has made one?"
+  multi
+  choices={[
+    { text: "Ask Claude to revise it without repasting", correct: true },
+    { text: "Copy it out into another app", correct: true },
+    { text: "Download it as a file", correct: true },
+    { text: "Send it directly from Claude to your manager's Slack" }
+  ]}
+/>
+
+## What's next
+
+Next: **Working with skills** — packaged know-how Claude can pick up on demand.

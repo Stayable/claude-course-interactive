@@ -14,6 +14,7 @@ export const runtime = "nodejs";
 interface RunRequest {
   system?: string;
   prompt: string;
+  prefill?: string;
   model?: string;
 }
 
@@ -38,6 +39,7 @@ export async function POST(req: NextRequest) {
 
   const prompt = (body.prompt ?? "").toString();
   const system = body.system ? body.system.toString().slice(0, MAX_INPUT_CHARS) : undefined;
+  const prefill = body.prefill ? body.prefill.toString().slice(0, MAX_INPUT_CHARS) : undefined;
   const model = ALLOWED_MODELS.includes(body.model ?? "") ? body.model! : DEFAULT_MODEL;
 
   if (!prompt.trim()) {
@@ -48,11 +50,17 @@ export async function POST(req: NextRequest) {
   }
 
   const client = getClient();
+  const messages: { role: "user" | "assistant"; content: string }[] = [
+    { role: "user", content: prompt },
+  ];
+  if (prefill && prefill.trim()) {
+    messages.push({ role: "assistant", content: prefill });
+  }
   const stream = await client.messages.stream({
     model,
     max_tokens: MAX_OUTPUT_TOKENS,
     system,
-    messages: [{ role: "user", content: prompt }],
+    messages,
   });
 
   const encoder = new TextEncoder();

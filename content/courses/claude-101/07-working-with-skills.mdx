@@ -1,0 +1,92 @@
+# Working with skills
+
+A **skill** is a small, named package of know-how that Claude can pick up when it's relevant — and ignore when it isn't. Think of it as a folder that says *"if the task is X, here's how to do it well, and here are the helper scripts and templates you'll need."*
+
+You don't *call* a skill. Claude reads the task, decides which skills apply, and uses them.
+
+<Diagram
+  takeaway="Skills sit on a shelf. Claude checks the shelf for the task at hand, picks the ones that fit, and uses them."
+  chart={`flowchart LR
+    T["Task<br/>'Make a slide deck for Friday's review'"] --> M{Claude checks<br/>the skill shelf}
+    M --> S1["pptx skill<br/>(how to build .pptx files)"]
+    M --> S2["brand-guidelines skill<br/>(your company's look)"]
+    M --> S3["finance-formatting skill<br/>(grids, dark headers)"]
+    S1 --> O[Output]
+    S2 --> O
+    S3 --> O`}
+/>
+
+## Why skills matter
+
+Skills do three things at once:
+
+- **Consistency.** Every output of a kind looks the same way. Your brand stays your brand.
+- **Speed.** Claude doesn't have to relearn your conventions each time.
+- **Scoping.** A skill is loaded only when the task needs it. Your conversation stays small.
+
+You'd notice a missing skill the way you'd notice a missing checklist — the work would still get done, just rougher and more inconsistent.
+
+## What goes inside a skill
+
+A skill is, at its smallest:
+
+- **A short instruction file.** *"When the user asks for X, do it this way. Avoid Y. Always include Z."*
+- **Optional supporting files.** Templates, helper scripts, examples, a brand color palette, a sample document to mimic.
+
+It's the same shape as a recipe card. The name on the front, the steps inside, ingredients in the corner.
+
+## When you'd add one
+
+<Compare
+  leftLabel="Add a skill when..."
+  rightLabel="Don't bother when..."
+  left={[
+    "You ask Claude for the same kind of thing repeatedly",
+    "There's a 'house style' you want every output to follow",
+    "You have helper scripts or templates Claude should use",
+    "You want the same behavior across many chats and Projects"
+  ]}
+  right={[
+    "It's a one-off task you won't repeat",
+    "The instruction fits in one sentence at the top of the chat",
+    "You're still figuring out what good output looks like",
+    "A Project's instructions field would already do the job"
+  ]}
+  takeaway="Skills are for behavior you want repeated. One-offs go in the chat."
+/>
+
+## Skills vs. Projects
+
+These two are easy to confuse. A quick mental model:
+
+- A **Project** sets *what* Claude is working on (the topic, the files, the audience).
+- A **skill** sets *how* Claude should do a particular kind of task (the technique, the format, the conventions).
+
+You can mix them. A Project about "Q3 board prep" can use a `slides-formatting` skill and a `financial-formatting` skill, both of which work just as well in unrelated Projects.
+
+## Check yourself
+
+<Quiz
+  question="You catch yourself pasting the same 200-word note about your brand voice into every chat. What's the right move?"
+  choices={[
+    { text: "Keep pasting — it's working." },
+    { text: "Turn it into a skill so Claude picks it up automatically when the task is brand-writing.", correct: true, explanation: "Repeated behavior is exactly what skills are for." },
+    { text: "Memorize it." },
+    { text: "Email it to Anthropic and ask them to install it." }
+  ]}
+/>
+
+<Quiz
+  question="Which of these are real differences between skills and Projects?"
+  multi
+  choices={[
+    { text: "Projects bundle a topic and files; skills bundle a technique.", correct: true },
+    { text: "A skill is meant to apply across many Projects.", correct: true },
+    { text: "Claude decides when to use a skill; you decide when to use a Project.", correct: true },
+    { text: "Projects are paid, skills are free." }
+  ]}
+/>
+
+## What's next
+
+Next: **Connecting your tools** — letting Claude reach out to other apps you already use.

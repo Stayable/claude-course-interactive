@@ -5,12 +5,14 @@ import { useState } from "react";
 interface PlaygroundProps {
   initialPrompt?: string;
   system?: string;
+  prefill?: string;
   label?: string;
 }
 
 export function Playground({
   initialPrompt = "",
   system,
+  prefill,
   label = "Try it",
 }: PlaygroundProps) {
   const [prompt, setPrompt] = useState(initialPrompt);
@@ -26,7 +28,7 @@ export function Playground({
       const res = await fetch("/api/claude", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ prompt, system }),
+        body: JSON.stringify({ prompt, system, prefill }),
       });
       if (!res.ok) {
         const detail = await res.json().catch(() => ({}));
@@ -70,8 +72,14 @@ export function Playground({
         </button>
         {error ? <span className="text-sm text-red-600">{error}</span> : null}
       </div>
+      {prefill ? (
+        <div className="border-t border-ink-200 bg-ink-50/50 px-3 py-1.5 text-[10px] uppercase tracking-wider text-ink-400 dark:border-ink-700 dark:bg-ink-900">
+          Assistant prefill: <span className="font-mono normal-case tracking-normal text-ink-700 dark:text-ink-100">{prefill}</span>
+        </div>
+      ) : null}
       {output ? (
         <pre className="max-h-80 overflow-auto whitespace-pre-wrap border-t border-ink-200 bg-ink-50 p-3 font-mono text-sm dark:border-ink-700 dark:bg-ink-900">
+          {prefill ? <span className="text-ink-400">{prefill}</span> : null}
           {output}
         </pre>
       ) : null}

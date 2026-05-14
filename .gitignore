@@ -19,3 +19,7 @@ prisma/dev.db-journal
 .vscode
 .idea
 coverage
+tsconfig.tsbuildinfo
+
+# Claude Code workspace config (per-user)
+.claude/

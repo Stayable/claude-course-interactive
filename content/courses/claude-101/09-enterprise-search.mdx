@@ -1,0 +1,81 @@
+# Enterprise search
+
+Most of what your company "knows" isn't in one place. It's scattered across Drive, SharePoint, Notion, Slack, Confluence, Salesforce, the wiki nobody updates anymore, and an email thread from 2023. **Enterprise search** lets Claude look across all of that in one ask.
+
+It's not magic. It's the same connector idea from the last lesson, but pointed at *the union* of the systems your team uses.
+
+<Diagram
+  takeaway="One question, many sources. Claude pulls the relevant bits from each and assembles an answer with links back."
+  chart={`flowchart LR
+    Q["'How did we price the Acme renewal?'"] --> C[Claude]
+    C --> A[Drive / SharePoint]
+    C --> B[Slack threads]
+    C --> D[CRM notes]
+    C --> E[Wiki / Confluence]
+    A --> R[Answer + sources]
+    B --> R
+    D --> R
+    E --> R`}
+/>
+
+## What it's good at
+
+- **Pulling threads together.** A question whose answer lives partly in a doc, partly in a thread, and partly in someone's notes.
+- **"Where is…?"** *Where's the latest version of the security questionnaire? Where did we land on the pricing change?*
+- **Onboarding context.** *"What does my team mean when they say 'tier-2 escalation'? Show me prior examples."*
+- **Pre-meeting prep.** *"Summarize everything we know about the Northwind account."*
+
+## What it's not
+
+<Compare
+  leftLabel="Enterprise search is..."
+  rightLabel="Enterprise search isn't..."
+  left={[
+    "A way to ask questions across your company's knowledge",
+    "Bounded by what each tool's permissions let *you* see",
+    "Sourced — Claude tells you which doc or thread it pulled from",
+    "Live — it reads at ask-time, not from a stale snapshot"
+  ]}
+  right={[
+    "A new place to store documents (use the systems you already have)",
+    "A way to see things you don't have permission to see",
+    "A replacement for your team having clean, findable docs",
+    "A search engine for the public web"
+  ]}
+  takeaway="It searches what your account can already access — your existing permissions are the fence."
+/>
+
+## A small rule for asking
+
+Treat the question the way you'd treat one to a smart new hire: *be specific about scope and time*. "What did Sales decide about discounts?" is too vague. "What did Sales decide about new-logo discounts in Q3?" gives Claude something to actually search for.
+
+<Callout kind="tip">
+Always check the cited sources. Enterprise search shows you where each piece of the answer came from — click through when the stakes matter.
+</Callout>
+
+## Check yourself
+
+<Quiz
+  question="You ask Claude an enterprise-search question and one of the cited docs is restricted to your CFO's team. What happens?"
+  choices={[
+    { text: "Claude reads it anyway — it's an admin tool." },
+    { text: "Claude can only see what your account can see. Restricted docs stay restricted.", correct: true, explanation: "Permissions are inherited. Enterprise search doesn't elevate access." },
+    { text: "Claude asks the CFO for permission." },
+    { text: "Claude guesses what was in the doc." }
+  ]}
+/>
+
+<Quiz
+  question="Which questions are well-suited to enterprise search?"
+  multi
+  choices={[
+    { text: "'Pull together everything we've said about the Acme account this quarter.'", correct: true },
+    { text: "'What's the latest version of the security questionnaire?'", correct: true },
+    { text: "'What's the weather in Boca Raton?'" },
+    { text: "'Summarize last week's #launch-prep channel.'", correct: true }
+  ]}
+/>
+
+## What's next
+
+Next: **Research mode for deep dives** — when you want Claude to take its time and chase a question down.

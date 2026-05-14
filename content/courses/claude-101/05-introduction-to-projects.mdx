@@ -1,0 +1,94 @@
+# Introduction to projects
+
+A **Project** is a folder for your conversations with Claude. Everything inside it shares the same context — the same documents, the same instructions, the same shared memory of what's been discussed. New chats inside a Project start *informed*, not blank.
+
+The shape is simple:
+
+<Diagram
+  takeaway="A Project bundles instructions and reference files once. Every chat inside the Project gets them for free."
+  chart={`flowchart LR
+    P[Project]
+    P --> I["Instructions<br/>(role, tone, what you're doing)"]
+    P --> F["Files<br/>(docs, briefs, examples)"]
+    P --> C1[Chat 1]
+    P --> C2[Chat 2]
+    P --> C3[Chat 3]
+    I -.-> C1
+    I -.-> C2
+    I -.-> C3
+    F -.-> C1
+    F -.-> C2
+    F -.-> C3`}
+/>
+
+## When to make a Project
+
+Make a Project the moment you notice yourself:
+
+- Pasting the same brief or background into every new chat
+- Re-explaining your company, your role, or your customer to Claude every time
+- Wanting Claude to remember a long document across multiple sessions
+- Working on something that'll take more than a day
+
+A one-off task doesn't need a Project. Anything you'll come back to does.
+
+## What goes inside
+
+Two things, both optional but powerful:
+
+1. **Instructions.** A short note Claude reads at the top of every chat. *"I'm a marketing manager at a B2B SaaS company. We sell to mid-market HR teams. Default to plain language, no jargon."* Two or three sentences is usually enough.
+2. **Files.** PDFs, docs, slides, transcripts — anything Claude should know. The brand guide. The product brief. Customer interview notes. They stay attached to the Project.
+
+<Compare
+  leftLabel="Good Project material"
+  rightLabel="Bad Project material"
+  left={[
+    "A short note about who you are and how you want Claude to write",
+    "Reference docs you'll keep coming back to (brand guide, product spec)",
+    "Examples of the output style you want (3 of your best emails)",
+    "A glossary of terms specific to your work"
+  ]}
+  right={[
+    "An entire customer database (too much, not all relevant)",
+    "A single email you'll only need once (just paste it in the chat)",
+    "Files with stale information you'll have to remember to delete",
+    "Secrets — passwords, API keys, anything you wouldn't share with a contractor"
+  ]}
+  takeaway="Project files should be reference material, not data dumps."
+/>
+
+## Projects vs. one long chat
+
+These two solve different problems.
+
+- A **long chat** carries context *within one thread*. Great while you're in flow. Not searchable later.
+- A **Project** carries context *across many threads*. You can start a fresh chat anytime and Claude is already up to speed.
+
+If you've been pasting the same paragraph into 10 chats this week, you needed a Project ten chats ago.
+
+## Check yourself
+
+<Quiz
+  question="You're a freelance writer juggling three regular clients. Each has a different voice and brand. What's the cleanest setup?"
+  choices={[
+    { text: "One Project, with all three brand guides inside." },
+    { text: "Three Projects — one per client, each with that client's brand guide and example pieces.", correct: true, explanation: "Separate Projects keep voices from bleeding into each other." },
+    { text: "No Projects — paste the brand guide every time." },
+    { text: "One enormous shared chat." }
+  ]}
+/>
+
+<Quiz
+  question="Which of these belong in a Project's instructions?"
+  multi
+  choices={[
+    { text: "Who you are and what you're doing", correct: true },
+    { text: "How you want Claude to write (tone, length defaults)", correct: true },
+    { text: "Your full password manager export" },
+    { text: "Words and phrases to avoid", correct: true }
+  ]}
+/>
+
+## What's next
+
+Next: **Creating with artifacts** — when Claude pops the answer out of the chat and into its own canvas.

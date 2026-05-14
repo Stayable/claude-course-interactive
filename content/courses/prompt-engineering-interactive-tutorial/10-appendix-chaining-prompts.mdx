@@ -1,0 +1,115 @@
+# Appendix 10.1: Chaining prompts
+
+Sometimes a task is too big for a single Claude call to do well. The fix is to **chain** prompts: take the output of one call, feed it (or a slice of it) into the next. Each step does one job. The whole pipeline does the big thing.
+
+## Two common shapes
+
+<Diagram
+  takeaway="Chaining splits a complex job into focused steps. Each Claude call has one purpose."
+  chart={`flowchart LR
+    subgraph Refine[Refinement chain]
+      A1[Prompt 1: draft] --> A2[Prompt 2: improve draft]
+      A2 --> A3[Prompt 3: final pass]
+    end
+    subgraph Pipeline[Pipeline chain]
+      B1[Prompt 1: extract entities] --> B2[Prompt 2: classify each]
+      B2 --> B3[Prompt 3: write summary using results]
+    end`}
+/>
+
+**Refinement** asks Claude to redo or improve its own work. The first reply is the draft; the second reply (with the draft attached) is the improvement.
+
+**Pipeline** uses the output of one prompt as the *input data* of the next. Extract → classify → summarize is a classic three-step pipeline.
+
+## When chaining wins
+
+<Compare
+  leftLabel="Chain when..."
+  rightLabel="Keep it one prompt when..."
+  left={[
+    "The task has distinct subtasks that benefit from focus (extract, then judge, then summarize)",
+    "You want to validate or correct an answer with a second pass",
+    "Different steps need different roles, temperatures, or output formats",
+    "You need to programmatically inspect or filter intermediate output"
+  ]}
+  right={[
+    "One prompt with precognition tags already nails it",
+    "Adding a second call would just be 'try harder'",
+    "Latency and cost matter more than the last 5% of quality",
+    "The task is small enough that Claude can hold the whole thing"
+  ]}
+  takeaway="Each link in a chain costs a round trip. Use chains where the wins are worth it."
+/>
+
+## A simple refinement chain
+
+Turn 1: write a 2-sentence product blurb.
+
+<Playground
+  label="Step 1: first draft"
+  initialPrompt="Write a 2-sentence product blurb for a B2B SaaS company that sells AI-powered customer support automation to mid-market software companies."
+/>
+
+Turn 2: paste the result back and improve it.
+
+<Playground
+  label="Step 2: improve the draft"
+  initialPrompt={`Here is a product blurb:
+<blurb>
+[Paste the blurb from Step 1 here]
+</blurb>
+
+Rewrite it to be sharper. Cut every adjective that doesn't add information. Lead with the customer's problem, not the product's features. Keep it to 2 sentences.`}
+/>
+
+You'd run this in a real script by reading the output of the first call and passing it programmatically into the second.
+
+## Self-correction: a special case
+
+A useful sub-pattern: ask Claude to critique its own answer, then use the critique to improve it.
+
+<Playground
+  label="Self-critique chain (step 1: answer)"
+  initialPrompt="What are three risks of using public Wi-Fi at airports, and one quick precaution for each?"
+/>
+
+<Playground
+  label="Self-critique chain (step 2: critique + revise)"
+  initialPrompt={`Below is a previous answer about public Wi-Fi risks at airports.
+
+<previous_answer>
+[Paste step 1's output]
+</previous_answer>
+
+First, critique the answer in <critique></critique> tags — what's vague, what's missing, what's overstated.
+Then, in <revised></revised> tags, write a sharper version that addresses your critique.`}
+/>
+
+## Programmatic chaining
+
+In code, a chain is just two API calls where the first response becomes part of the second prompt:
+
+```python
+# Step 1
+draft = get_completion(
+    messages=[{"role": "user", "content": "Write a 2-sentence blurb..."}]
+)
+
+# Step 2: feed draft back in
+improved = get_completion(
+    messages=[{
+        "role": "user",
+        "content": f"Improve this blurb: <blurb>{draft}</blurb>"
+    }]
+)
+```
+
+Programs that chain many Claude calls and decide what to do based on intermediate output are the start of **agents** — covered in depth in the Anthropic Tool Use course and the MCP courses.
+
+## What's next
+
+Next: **Tool use** — letting Claude call functions in your code to fetch data or take actions.
+
+<Attribution
+  originalUrl="https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial"
+/>

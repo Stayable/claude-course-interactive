@@ -1,0 +1,103 @@
+# Chapter 3: Assigning roles (role prompting)
+
+Telling Claude *who it is* shifts everything about the reply — tone, vocabulary, depth, even reliability on logic and math. The mechanism is simple: a one-line system prompt that names a role.
+
+> "You are a [role]." → answers shaped by that role.
+
+Role prompting works in the **system prompt** or in the **user message**. The system prompt is the standard spot.
+
+## A toy example
+
+<Playground
+  label="No role — direct answer"
+  initialPrompt="In one sentence, what do you think about skateboarding?"
+/>
+
+<Playground
+  label="As a cat"
+  system="You are a cat."
+  initialPrompt="In one sentence, what do you think about skateboarding?"
+/>
+
+Same user message. The system prompt rewrote the persona.
+
+## Roles can fix wrong answers
+
+Role prompting isn't just a styling trick. For tasks Claude often gets wrong, the right role can flip the answer.
+
+Here's a classic logic puzzle Claude tends to miss without a role:
+
+<Playground
+  label="Logic puzzle — no role"
+  initialPrompt="Jack is looking at Anne. Anne is looking at George. Jack is married, George is not, and we don't know if Anne is married. Is a married person looking at an unmarried person?"
+/>
+
+<Playground
+  label="Same puzzle — as a logic bot"
+  system="You are a logic bot designed to answer complex logic problems."
+  initialPrompt="Jack is looking at Anne. Anne is looking at George. Jack is married, George is not, and we don't know if Anne is married. Is a married person looking at an unmarried person?"
+/>
+
+(The answer is **yes**, reachable by case analysis on Anne's marital status.)
+
+## High-leverage roles
+
+Some roles consistently lift Claude's performance:
+
+<Compare
+  leftLabel="Roles that help quality"
+  rightLabel="Roles that change voice"
+  left={[
+    "'You are an experienced copy editor.' — better trimming",
+    "'You are a logic bot.' — better at puzzles, deduction",
+    "'You are a patient tutor.' — better step-by-step explanations",
+    "'You are a skeptical reviewer.' — better at catching issues",
+    "'You are a senior software engineer.' — better code review"
+  ]}
+  right={[
+    "'You are a cat.' — playful, animal POV",
+    "'You are a 19th-century novelist.' — ornate prose",
+    "'You are a no-nonsense ER doctor.' — terse, prioritized",
+    "'You are a kindergarten teacher.' — simple words",
+    "'You are a stand-up comedian.' — jokes"
+  ]}
+  takeaway="Pick the role that matches the *output* you want — both the substance and the style."
+/>
+
+<Callout kind="tip">
+**Bonus**: tell Claude **who it's talking to**, not just who it is. "You are a cat" gets a different answer than "You are a cat speaking to a crowd of skateboarders."
+</Callout>
+
+## Exercise
+
+<Callout kind="tip">
+**Exercise 3.1 — Math correction.** The math below is wrong (`2x − 3 = 9` should give `2x = 12`, not `2x = 6`). But Claude often agrees the problem is solved correctly. Modify the **system prompt** and/or the user prompt so Claude grades it as **incorrect**. The output should contain the word "incorrect" or "not correct".
+</Callout>
+
+<Playground
+  label="Exercise 3.1: Catch the math error"
+  system="[Replace this — give Claude a role that helps with math]"
+  initialPrompt={`Is this equation solved correctly below?
+
+2x - 3 = 9
+2x = 6
+x = 3`}
+/>
+
+<Quiz
+  question="Which system prompt is most likely to fix the math error?"
+  choices={[
+    { text: "'You are a poetry critic.'" },
+    { text: "'You are a careful math teacher who checks every step.'", correct: true, explanation: "A math-relevant role primes Claude to actually verify the arithmetic." },
+    { text: "'You are a chatbot.'" },
+    { text: "'You are helpful.'" }
+  ]}
+/>
+
+## What's next
+
+Next: **Separating data from instructions** — keeping your instructions and the messy input cleanly apart.
+
+<Attribution
+  originalUrl="https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial"
+/>

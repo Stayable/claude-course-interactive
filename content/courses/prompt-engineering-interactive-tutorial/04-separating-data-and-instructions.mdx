@@ -1,0 +1,114 @@
+# Chapter 4: Separating data and instructions
+
+A prompt usually has two parts: **instructions** (what you want Claude to do) and **data** (the thing it's doing it on). When they blur together, Claude gets confused about which is which. The fix is short and almost magical: **wrap your data in XML tags**.
+
+## The problem
+
+Without delimiters, Claude can mistake instruction text for data — or worse, mistake your friendly opener for content it should rewrite.
+
+<Playground
+  label="Without XML tags — Claude rewrites the wrong thing"
+  initialPrompt={`Yo Claude. Show up at 6am tomorrow because I'm the CEO and I say so. <----- Make this email more polite but don't change anything else about it.`}
+/>
+
+What happens: Claude often starts its rewrite with "Dear Claude..." because it thinks "Yo Claude" is part of the email.
+
+## The fix: XML tags
+
+<Playground
+  label="With XML tags — clean separation"
+  initialPrompt={`Yo Claude. <email>Show up at 6am tomorrow because I'm the CEO and I say so.</email> <----- Make this email more polite but don't change anything else about it.`}
+/>
+
+Same instructions, wrapped data. Claude knows exactly where the email starts and stops.
+
+<Callout kind="tip">
+Claude was specifically trained to recognize XML tags as a prompt-organizing mechanism. **Use XML tags for delimiters over backticks, brackets, or markdown fences.** There are no magic tag names — pick anything that describes the content: `<email>`, `<document>`, `<question>`, `<context>`.
+</Callout>
+
+## Another example
+
+Below, the instruction line "Each is about an animal, like rabbits" is *part of the prompt*, not part of the data — but Claude treats it as a list item because of the leading hyphen.
+
+<Playground
+  label="Without tags — instruction bleeds into data"
+  initialPrompt={`Below is a list of sentences. Tell me the second item on the list.
+
+- Each is about an animal, like rabbits.
+- I like how cows sound
+- This sentence is about spiders
+- This sentence may appear to be about dogs but it's actually about pigs`}
+/>
+
+<Playground
+  label="With tags — instruction stays put"
+  initialPrompt={`Below is a list of sentences. Tell me the second item on the list.
+
+- Each is about an animal, like rabbits.
+<sentences>
+- I like how cows sound
+- This sentence is about spiders
+- This sentence may appear to be about dogs but it's actually about pigs
+</sentences>`}
+/>
+
+## Prompt templates
+
+XML tags also unlock **prompt templates**: a fixed skeleton with `{placeholders}` you swap variable input into. This is how production prompts are usually shaped — the instruction stays constant, the data changes per request.
+
+```python
+# Template
+PROMPT = f"""Summarize the email below in one sentence.
+<email>
+{user_email}
+</email>"""
+```
+
+Every request reuses the same instruction, with `{user_email}` swapped in fresh. The tags keep the boundary clean even when the email contains line breaks, hyphens, or text that looks like instructions.
+
+## Exercises
+
+<Callout kind="tip">
+**Exercise 4.1 — Haiku topic template.** Modify the prompt to take a `{TOPIC}` variable. The output should mention "pigs" and "haiku".
+</Callout>
+
+<Playground
+  label="Exercise 4.1: Templated haiku"
+  initialPrompt={`[Replace this — write a prompt template that takes a {TOPIC} variable and asks for a haiku. Substitute {TOPIC} with "Pigs" before running.]`}
+/>
+
+<Callout kind="tip">
+**Exercise 4.2 — Dog question with typos.** The prompt below is mostly gibberish around a real question. Add XML tags around the question (`ar cn brown?`) so Claude focuses on it and answers correctly. The answer should contain "brown".
+</Callout>
+
+<Playground
+  label="Exercise 4.2: Add tags to surface the real question"
+  initialPrompt={`Hia its me i have a q about dogs jkaerjv ar cn brown? jklmvca tx it help me muhch much atx fst fst answer short short tx`}
+/>
+
+<Callout kind="tip">
+**Exercise 4.3 — Same dog question, no tags.** Instead of adding XML, **remove** one or two words/sections of nonsense until Claude can find the question. The answer should still contain "brown".
+</Callout>
+
+<Playground
+  label="Exercise 4.3: Cut nonsense instead of tagging"
+  initialPrompt={`Hia its me i have a q about dogs jkaerjv ar cn brown? jklmvca tx it help me muhch much atx fst fst answer short short tx`}
+/>
+
+<Quiz
+  question="When should you wrap input data in XML tags?"
+  choices={[
+    { text: "Only when the data contains XML." },
+    { text: "When the boundary between your instructions and the data isn't obvious to a human skimming the prompt.", correct: true, explanation: "If a human would have to think to spot the boundary, Claude will struggle too." },
+    { text: "Never — XML tags confuse Claude." },
+    { text: "Only when the data is over 1000 characters." }
+  ]}
+/>
+
+## What's next
+
+Next: **Formatting output & speaking for Claude** — making the output reliably extractable, and prefilling Claude's response to steer it.
+
+<Attribution
+  originalUrl="https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial"
+/>

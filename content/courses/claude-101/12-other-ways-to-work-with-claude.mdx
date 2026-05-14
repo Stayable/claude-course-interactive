@@ -1,0 +1,83 @@
+# Other ways to work with Claude
+
+Most of this course has been about Claude in a browser tab and Claude in the desktop app. Those are the front doors. But there are several other ways to reach the same model, each with a reason to exist.
+
+<SurfaceMap takeaway="Same Claude, more shells. Pick the one that matches where you are and what you're doing." />
+
+## Mobile
+
+The Claude apps for iOS and Android put Chat in your pocket. They're for the kind of question you'd otherwise lose to a stray thought:
+
+- "Quick — rewrite this text to my landlord, less passive."
+- "What's a good 25-min recipe with the four things in my fridge?"
+- "Summarize this article I'm half-reading."
+
+Mobile is great for short, single-turn work. Long drafting still belongs on a keyboard.
+
+## Voice
+
+When Claude's mobile app supports voice, the conversation gets spoken. The same rules apply — be specific, give the role, say what shape you want the answer in — they just sound different out loud.
+
+Voice is most useful when:
+
+- Your hands are busy (driving, cooking, walking).
+- You're thinking out loud and want a sounding board.
+- The output is something you'll listen to or act on right now, not save.
+
+## Browser extension / inline assistance
+
+Some surfaces put Claude *inside* the tools you already use — a side panel that follows you across the web, or assistance built into specific apps. The benefit isn't a different Claude; it's not having to leave what you're doing.
+
+The trade-off: the assistant only sees what the host app shows it. If it can't see the whole page, it can't reason about the whole page. Paste in what's missing.
+
+## The Claude API
+
+If you're a developer (or working with one), you can talk to Claude programmatically — from a script, a backend, your own app. Same model, no UI. You write the request, Claude writes the response, your code does whatever it wants with the result.
+
+The API is the right tool when:
+
+- You want Claude doing the same task on *thousands* of inputs (not one).
+- You're building a product that uses Claude under the hood.
+- You need Claude inside an automated workflow — a scheduled job, a webhook, a pipeline.
+
+There's a dedicated **Building with the Claude API** course for this. Claude 101 doesn't go further than naming the door.
+
+## When to switch surfaces
+
+<Compare
+  leftLabel="If your situation is..."
+  rightLabel="The right surface is usually..."
+  left={[
+    "Quick thought, no laptop in sight",
+    "Drafting a 2-page piece, want artifacts",
+    "Editing real files on your computer",
+    "Shipping software",
+    "Same task on 10,000 customer records",
+    "Hands busy, eyes occupied"
+  ]}
+  right={[
+    "Mobile app",
+    "Desktop app (Chat or Cowork)",
+    "Cowork",
+    "Claude Code",
+    "Claude API",
+    "Voice"
+  ]}
+  takeaway="Surface follows situation. If you find yourself fighting the surface, you're probably on the wrong one."
+/>
+
+## Check yourself
+
+<Quiz
+  question="You want Claude to classify 50,000 support tickets by topic and write a one-line summary of each. What's the right surface?"
+  choices={[
+    { text: "Mobile — type each one in by hand." },
+    { text: "Chat — paste them all into one conversation." },
+    { text: "The Claude API — automate it from a script.", correct: true, explanation: "Same task on many inputs is the API's home turf." },
+    { text: "Voice — read them out loud." }
+  ]}
+/>
+
+## What's next
+
+Last lesson: **What's next?** — where to go after Claude 101, in priority order.

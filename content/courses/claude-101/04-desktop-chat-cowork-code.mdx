@@ -1,0 +1,101 @@
+# Claude desktop app: Chat, Cowork, Code
+
+Lesson 01 introduced the surfaces in a glance. This lesson goes one level deeper into what *each* one is actually for, so you stop wondering which to open.
+
+The Claude desktop app is one window with three modes. Same model underneath. Different working style.
+
+<Diagram
+  takeaway="One window, three modes. Pick the mode that matches the shape of the work."
+  chart={`flowchart TB
+    D[Claude desktop app]
+    D --> Chat[Chat<br/>Talk to Claude]
+    D --> Cowork[Cowork<br/>Work alongside Claude on files]
+    D --> Code[Code<br/>Hand Claude a codebase]
+    Chat -.->|"messages"| out1[Replies in the chat]
+    Cowork -.->|"file edits"| out2[Real files on your disk]
+    Code -.->|"commits, runs"| out3[A whole repo]`}
+/>
+
+## Chat
+
+The default. A conversation with Claude in the desktop window. Nothing on your computer is touched unless you attach it to the message.
+
+Use Chat when:
+
+- You're thinking out loud and want a smart sounding-board.
+- You're drafting something that'll live in your head or in another app.
+- The task is short — one or two turns of back-and-forth.
+
+If a task could fit in a single chat thread, Chat is almost always the right surface.
+
+## Cowork
+
+Cowork is Chat plus *real files*. You point Claude at a folder or document, and it can read, edit, and create files there directly. You see the diffs before they happen.
+
+Use Cowork when:
+
+- The work crosses more than one file — a proposal with an attached spreadsheet, a slide deck with notes, a draft contract with redlines.
+- You want Claude to actually *do* the edit, not just describe it.
+- You want to review changes before they land.
+
+<Callout kind="tip">
+Cowork's superpower is that the conversation stays in one place. You don't paste the document in, get a rewrite, paste it back, lose your place. Claude works on the file with you.
+</Callout>
+
+## Code
+
+Code is for software work. You hand Claude a codebase. It can read every file, run commands, write tests, fix bugs, and commit changes. You're still the one driving — Claude pauses for permission on anything risky.
+
+Use Code when:
+
+- You're shipping software.
+- The task spans many files or needs to *run* something to verify.
+- You want a record (commits, diffs) of what changed and why.
+
+There's a separate **Claude Code 101** course for this surface — that's where to go next if Code is your main use.
+
+## Which one, when?
+
+<Compare
+  leftLabel="Stay in Chat if..."
+  rightLabel="Switch to Cowork / Code if..."
+  left={[
+    "The output is a message, a draft, or a list",
+    "You'd just copy-paste the result into another app",
+    "The work is short — one or two turns",
+    "You're brainstorming and want speed"
+  ]}
+  right={[
+    "The output is a file, or several files, on your disk",
+    "You'd rather Claude do the edit than describe it",
+    "You need a record of what changed (Cowork shows diffs; Code makes commits)",
+    "The task crosses 3+ files or needs a command run to verify"
+  ]}
+  takeaway="Open Chat when the output is a message. Open Cowork or Code when the output is a file or a working program."
+/>
+
+## Check yourself
+
+<Quiz
+  question="You're rewriting a 12-page contract that lives as a Word doc on your computer, and you want to see every redline before accepting it."
+  choices={[
+    { text: "Chat — paste the contract into the message." },
+    { text: "Cowork — point Claude at the file, review each edit.", correct: true, explanation: "File on disk + diffs you can approve = Cowork." },
+    { text: "Code — open the file in a repo." },
+    { text: "claude.ai in a browser — same thing as Chat." }
+  ]}
+/>
+
+<Quiz
+  question="You're spitballing taglines for a side project. You'll pick one and paste it into Canva."
+  choices={[
+    { text: "Chat — fastest, no files involved.", correct: true, explanation: "Short, no file output, you'll just copy-paste the winner." },
+    { text: "Cowork — let Claude write the file." },
+    { text: "Code — open a new repo." },
+    { text: "A spreadsheet of variants." }
+  ]}
+/>
+
+## What's next
+
+Next: **Introduction to projects** — how to keep Claude on the same page across many conversations.

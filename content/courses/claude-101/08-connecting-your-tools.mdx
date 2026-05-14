@@ -1,0 +1,89 @@
+# Connecting your tools
+
+Out of the box, Claude can read what you paste and write what you ask for. But it can't look in your email, your drive, your Slack, or your CRM unless you give it a way in. **Connectors** are those ways in.
+
+A connector hooks Claude up to one outside app — securely, on your terms. You stay in control of *what* it can see and *when*.
+
+<Diagram
+  takeaway="A connector is a controlled bridge. Claude only sees what you've authorized, and only when you ask."
+  chart={`flowchart LR
+    You["You: 'Find emails from Priya about the Q3 plan.'"] --> Claude
+    Claude --> G{Has connector?}
+    G -->|yes| Gmail
+    Gmail -->|matching emails| Claude
+    Claude --> Out["Summary in the chat"]
+    G -->|no| NoAccess["Claude can't reach it.<br/>Connect first."]`}
+/>
+
+## What a connector unlocks
+
+Once a tool is connected, the conversation can do things like:
+
+- *"Pull up the deck I made with Priya last month and update slide 4."*
+- *"Summarize this week's #launch-prep channel — what's blocking the release?"*
+- *"What's on my calendar tomorrow afternoon? Find me a 30-min slot to call my mom."*
+- *"In our CRM, list every account in the financial-services segment with no activity in 60 days."*
+
+The pattern is always the same: you ask in plain language, Claude figures out which connector(s) it needs, asks for the relevant data, and answers.
+
+## You're still in charge
+
+Three guardrails that matter:
+
+<Compare
+  leftLabel="What you control"
+  rightLabel="What Claude won't do"
+  left={[
+    "Which apps are connected (you authorize each one)",
+    "What scopes each connection has (read-only vs. write)",
+    "When to disconnect (revoke any time)",
+    "What Claude can see — narrow the scope if it asks for too much"
+  ]}
+  right={[
+    "Connect to something without your permission",
+    "Take destructive actions silently — it pauses for confirmation",
+    "Cache your data forever — the connection is live, not a copy",
+    "Mix your accounts together — each is scoped separately"
+  ]}
+  takeaway="A connector is a key you can take back. Hand them out narrowly, revoke when in doubt."
+/>
+
+## What's underneath
+
+The protocol Claude uses to talk to tools is called **MCP** — the Model Context Protocol. You don't need to know how it works to use a connector, but it's worth knowing the name. MCP is open: developers can build their own connectors for tools that don't have one yet.
+
+If you ever want to go deeper — building a connector, exposing your own internal tool to Claude — there's a dedicated **Introduction to Model Context Protocol** course. For Claude 101, the takeaway is just: *Claude can reach out to your apps, but only the ones you've handed a key to.*
+
+## A small mental model
+
+A useful way to think about connectors:
+
+- **Without connectors** — Claude is a smart colleague locked in a room. You bring it material; it works on whatever you bring.
+- **With connectors** — That colleague can step out of the room to look something up, but only into the rooms you've unlocked.
+
+## Check yourself
+
+<Quiz
+  question="You connect Claude to your Gmail. A week later you change your mind. What's true?"
+  choices={[
+    { text: "Once connected, the connection is permanent." },
+    { text: "You can revoke the connection at any time and Claude loses access immediately.", correct: true, explanation: "Connectors are keys you can take back. Revoking cuts access." },
+    { text: "Claude will keep a copy of every email it saw." },
+    { text: "Anthropic owns your inbox now." }
+  ]}
+/>
+
+<Quiz
+  question="Which statements about connectors are true?"
+  multi
+  choices={[
+    { text: "Each connection is scoped to one app, with permissions you set.", correct: true },
+    { text: "Claude pauses for confirmation before destructive actions.", correct: true },
+    { text: "The underlying protocol is called MCP — Model Context Protocol.", correct: true },
+    { text: "Once enabled, Claude can act on your accounts without you in the loop." }
+  ]}
+/>
+
+## What's next
+
+Next: **Enterprise search** — finding things across your company's stuff, not just one app.

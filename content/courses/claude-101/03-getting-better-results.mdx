@@ -1,0 +1,109 @@
+# Getting better results
+
+Lesson 02 covered the three pieces of a working first prompt. This one is the next layer: four patterns that consistently raise the quality of whatever you get back. None of them are clever. They're just things most people leave out.
+
+## 1. Give Claude the material
+
+Most of what people want from Claude is *about something specific* — a document, an email thread, a transcript, a snippet of code. Pasting the actual content in beats describing it every time.
+
+<Compare
+  leftLabel="Describing the material"
+  rightLabel="Pasting the material"
+  left={[
+    "'Summarize that long article about interest rates.'",
+    "'My boss wrote me a long email — give me a one-line response.'",
+    "'There's a bug in my function that splits strings.'"
+  ]}
+  right={[
+    "'Summarize this article in 3 bullets:\\n\\n[paste]'",
+    "'Reply to this email in one sentence, agreeing but pushing the meeting to Friday:\\n\\n[paste]'",
+    "'This function should split on commas but is splitting on every character. What's wrong?\\n\\n[paste code]'"
+  ]}
+  takeaway="Don't make Claude guess what you're talking about. Paste it."
+/>
+
+## 2. Show an example of what good looks like
+
+If you've got even one example of the output you want, give it. Claude will match the *shape* of the example almost every time — length, tone, structure, level of detail.
+
+<TypingDemo
+  prompt={`Rewrite my product update in the style of the example below.
+
+Example (the style I want):
+"Shipped: faster image search. Up to 5x quicker on libraries over 10k images. Available now in 1.4.0."
+
+My update (rewrite to match the example):
+"We have released the new version of our application which includes various improvements to the image searching functionality, making it considerably faster especially on larger libraries."`}
+  response={`Shipped: faster image search. Noticeably quicker on large libraries. Available now in 1.4.0.`}
+/>
+
+One example is a hint. Three examples is a pattern Claude will follow tightly.
+
+## 3. Tell Claude what role it's playing
+
+A short role line at the top of a prompt shifts the whole answer. Claude isn't *pretending* — it's matching the vocabulary, depth, and care that role would bring.
+
+<Diagram
+  takeaway="The same question, given a role, gets a different and usually better answer."
+  chart={`flowchart LR
+    Q["'How should I price this?'"]
+    Q --> A["No role<br/>Generic 4-step framework"]
+    Q --> B["'You're a SaaS CFO.'<br/>Margin, CAC payback, anchor pricing"]
+    Q --> C["'You're a pricing coach for solopreneurs.'<br/>Skip the corporate stuff, get to a number"]`}
+/>
+
+Some roles that punch above their weight: *experienced editor*, *patient tutor*, *skeptical reviewer*, *terse senior engineer*, *plain-language translator*.
+
+## 4. Ask for the format
+
+You'll re-read or re-use the output more easily if it lands in the shape you need. Ask for it.
+
+- "Reply in a table with columns: name, role, decision."
+- "Bullets, 5–7 words each."
+- "One short paragraph, no bullets, no headers."
+- "Return only the rewritten sentence. No commentary."
+
+That last one is a quiet superpower. "Return only X" trims the *"Sure! Here's…"* preamble Claude often adds.
+
+## Check yourself
+
+<Quiz
+  question="You ask Claude to 'rewrite my email to sound more like my boss.' It comes back too generic. What's the first fix?"
+  choices={[
+    { text: "Paste one or two of your boss's actual emails as examples.", correct: true, explanation: "Examples beat adjectives. Claude can match a style it can see." },
+    { text: "Use the word 'professional' more times in the prompt." },
+    { text: "Increase the model's creativity setting.", explanation: "There's no creativity knob to twist your way out of this." },
+    { text: "Switch to a different model." }
+  ]}
+/>
+
+<Quiz
+  question="Which of these are reliable ways to raise output quality?"
+  multi
+  choices={[
+    { text: "Paste the actual material instead of describing it.", correct: true },
+    { text: "Show one example of the output you want.", correct: true },
+    { text: "Specify the format (table, bullets, length).", correct: true },
+    { text: "Type your prompt in ALL CAPS for emphasis." }
+  ]}
+/>
+
+## Try it
+
+<Playground
+  label="Try the four patterns at once"
+  initialPrompt={`You're a careful editor at a tech magazine. Tighten the paragraph below.
+
+Constraints:
+- Cut at least 30%.
+- Keep every factual claim.
+- One paragraph. No bullets.
+- Return only the edit. No preamble.
+
+Paragraph:
+"In today's increasingly fast-paced and competitive business landscape, organizations of all sizes are coming to realize that they need to leverage artificial intelligence tools in order to stay ahead of the curve. Many leaders, however, find themselves unsure where to start, often paralyzed by the sheer number of options available in the market today."`}
+/>
+
+## What's next
+
+Next: **Claude desktop app: Chat, Cowork, Code** — what each surface is for and when to switch.

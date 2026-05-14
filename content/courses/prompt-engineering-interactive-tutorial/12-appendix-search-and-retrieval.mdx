@@ -1,0 +1,136 @@
+# Appendix 10.3: Search & retrieval
+
+Claude's training data is fixed. Yesterday's announcement, your internal wiki, this morning's customer ticket — none of it is in the model. The way to bring that material into the conversation is **search and retrieval**: find the relevant snippets first, then hand them to Claude as context.
+
+This pattern goes by a few names. The most common one is **RAG** — Retrieval-Augmented Generation.
+
+## The shape
+
+<Diagram
+  takeaway="Retrieval finds the right pieces. Claude reads them and answers, with citations."
+  chart={`flowchart LR
+    Q[User question] --> R[Retriever]
+    R -->|searches| Corpus["Your corpus<br/>(docs, wiki, Slack, vectors)"]
+    Corpus -->|top-k matching chunks| Ctx[Relevant chunks]
+    Ctx --> P["Prompt<br/>(question + chunks)"]
+    P --> C[Claude]
+    C -->|cites chunks| A[Answer]`}
+/>
+
+Three jobs are happening:
+
+1. **Indexing** *(before any question is asked)*. Break your corpus into chunks, generate embeddings or build a search index, store them.
+2. **Retrieval** *(per question)*. Find the top-k chunks most likely to contain the answer.
+3. **Generation** *(per question)*. Hand the chunks to Claude inside `<document>` tags and ask the question.
+
+## Where each piece lives
+
+<Compare
+  leftLabel="Retrieval side"
+  rightLabel="Generation side (Claude)"
+  left={[
+    "Choosing chunk size (paragraph? section? page?)",
+    "Embedding model + vector database, or keyword search",
+    "Reranking the top-k results before they go to Claude",
+    "Filtering by permissions, date, source"
+  ]}
+  right={[
+    "Wrapping retrieved chunks in clear tags",
+    "Asking Claude to quote before answering (chapter 8)",
+    "Asking Claude to cite which chunk each claim came from",
+    "Giving Claude an out: 'If the chunks don't answer the question, say so.'"
+  ]}
+  takeaway="The retrieval side controls what Claude sees. The generation side controls what Claude does with it."
+/>
+
+## A skeleton prompt for RAG
+
+This is the prompt template that pairs well with any retriever — it borrows every technique from earlier chapters.
+
+```
+You are a careful assistant. Answer the user's question using ONLY
+the provided documents. If the documents don't contain the answer,
+say so.
+
+<documents>
+<document id="1">{chunk_1}</document>
+<document id="2">{chunk_2}</document>
+<document id="3">{chunk_3}</document>
+</documents>
+
+First, extract any quotes from the documents relevant to the
+question into <quotes></quotes> tags, each prefixed with [id=N]
+showing which document it came from.
+
+If there are no relevant quotes, write "no relevant quotes found".
+
+Then, write your answer in <answer></answer> tags. Cite documents
+inline like [1] or [2]. If quotes don't support an answer, say
+you can't answer from the provided documents.
+
+<question>{user_question}</question>
+```
+
+It hits: role (1), task context (2), input data with clear tags (6), rules + out (4), precognition (8 — extract quotes first), output format (9 — `<answer>` with citations), and prefill-friendly structure (10).
+
+<Playground
+  label="Try the RAG template against a mini-corpus"
+  initialPrompt={`You are a careful assistant. Answer the user's question using ONLY the provided documents. If the documents don't contain the answer, say so.
+
+<documents>
+<document id="1">The Stayable property at 2295 Kissimmee East was acquired in Q1 2023. It has 142 rooms and operates as an extended-stay format.</document>
+<document id="2">Stayable's Lakeland property (ID 4645) was acquired in Q3 2023 with 110 rooms. The market is dominated by long-stay business travelers.</document>
+<document id="3">Stayable operates 8 properties across Florida as of 2026.</document>
+</documents>
+
+First, extract any quotes from the documents relevant to the question into <quotes></quotes> tags, each prefixed with [id=N].
+
+If there are no relevant quotes, write "no relevant quotes found".
+
+Then, write your answer in <answer></answer> tags. Cite documents inline like [1] or [2].
+
+<question>How many rooms does the Lakeland property have?</question>`}
+  prefill="<quotes>"
+/>
+
+## What controls quality
+
+The retriever often matters more than the model. If retrieval pulls the wrong chunks, Claude can't recover — it can only answer using what it sees.
+
+Things that move the needle on retrieval quality:
+
+- **Chunk size.** Too small → loses context. Too large → noisy, wastes tokens. Paragraph-to-section size is usually right.
+- **Hybrid search.** Embeddings *plus* keyword search catches what each one misses.
+- **Reranking.** Run a fast first pass (vector or keyword), then a slower, smarter rerank on the top 20 to pick the final 3–5.
+- **Filtering.** Constrain by date, source, permission *before* generation, not after.
+
+## Where to go deeper
+
+This appendix is a sketch. The real content for production RAG with Claude lives in:
+
+- The **[Anthropic Cookbook](https://github.com/anthropics/anthropic-cookbook)** — recipes for embeddings, Wikipedia search, vector DBs.
+- The **Building with the Claude API** course (Skilljar) — long-form coverage of citations, prompt caching for retrieved documents, and batching.
+- The **MCP** courses — when retrieval should be a *tool* Claude calls on demand rather than context you stuff in up front.
+
+## You've finished the tutorial
+
+That's the whole interactive tutorial. You've covered:
+
+1. Basic prompt structure
+2. Being clear and direct
+3. Assigning roles
+4. Separating data from instructions
+5. Formatting output (XML, prefill, JSON)
+6. Precognition (thinking out loud)
+7. Few-shot examples
+8. Avoiding hallucinations
+9. Building complex prompts from scratch
+10. Chaining prompts
+11. Tool use
+12. Search & retrieval
+
+What to do next: use it. Pick a real task, build a prompt with as many of the ten elements as fit, and trim from there.
+
+<Attribution
+  originalUrl="https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial"
+/>

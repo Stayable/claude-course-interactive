@@ -40,3 +40,26 @@ html {
 .prose-app a {
   @apply text-accent underline underline-offset-2 hover:text-accent-dark;
 }
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-item {
+  opacity: 0;
+  animation: reveal-up 480ms ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-item {
+    animation: none;
+    opacity: 1;
+  }
+}

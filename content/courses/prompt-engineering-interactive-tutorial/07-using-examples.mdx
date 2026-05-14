@@ -1,0 +1,128 @@
+# Chapter 7: Using examples (few-shot prompting)
+
+The single most reliable way to control Claude's tone, structure, and format is to **show it an example of what you want**. This is called **few-shot prompting** — "n-shot" referring to how many examples are in the prompt. Zero-shot is no examples; one-shot is one; few-shot is two or more.
+
+Examples beat adjectives every time. "Make it casual" is vague. "Make it like this: [example]" is unambiguous.
+
+## Tone via example
+
+The default reply to a kid's question is often too formal. You could describe the tone you want in three paragraphs — or you could show one example.
+
+<Playground
+  label="Without an example — formal and robotic"
+  initialPrompt="Will Santa bring me presents on Christmas?"
+/>
+
+<Playground
+  label="With one example — warm, parent-like tone"
+  initialPrompt={`Please complete the conversation by writing the next line, speaking as "A".
+Q: Is the tooth fairy real?
+A: Of course, sweetie. Wrap up your tooth and put it under your pillow tonight. There might be something waiting for you in the morning.
+Q: Will Santa bring me presents on Christmas?`}
+/>
+
+Same Claude, vastly different voice. The example does the work.
+
+## Format via example
+
+Few-shot is especially powerful for **structured extraction**. Instead of describing the format, show it.
+
+<Playground
+  label="Few-shot extraction — Claude follows the pattern"
+  prefill="<individuals>"
+  initialPrompt={`Silvermist Hollow, a charming village, was home to an extraordinary group of individuals.
+Among them was Dr. Liam Patel, a neurosurgeon who revolutionized surgical techniques at the regional medical center.
+Olivia Chen was an innovative architect who transformed the village's landscape with her sustainable and breathtaking designs.
+The local theater was graced by the enchanting symphonies of Ethan Kovacs, a professionally-trained musician and composer.
+Isabella Torres, a self-taught chef with a passion for locally sourced ingredients, created a culinary sensation with her farm-to-table restaurant.
+<individuals>
+1. Dr. Liam Patel [NEUROSURGEON]
+2. Olivia Chen [ARCHITECT]
+3. Ethan Kovacs [MUSICIAN AND COMPOSER]
+4. Isabella Torres [CHEF]
+</individuals>
+
+Oak Valley, a charming small town, is home to a remarkable trio of individuals whose skills and dedication have left a lasting impact on the community.
+At the town's bustling farmer's market, you'll find Laura Simmons, a passionate organic farmer known for her delicious and sustainably grown produce.
+In Oak Valley's community center, Kevin Alvarez, a skilled dance instructor, has brought the joy of movement to people of all ages.
+Lastly, Rachel O'Connor, a tireless volunteer, dedicates her time to various charitable initiatives.`}
+/>
+
+We never explained the format. Claude inferred it from the one labeled example and applied it to the unlabeled paragraph.
+
+## How many examples?
+
+<Compare
+  leftLabel="One example is a hint"
+  rightLabel="Three+ examples is a pattern"
+  left={[
+    "Claude will follow it loosely",
+    "Good for capturing voice or rough format",
+    "Cheaper — fewer input tokens",
+    "Use when the task is forgiving"
+  ]}
+  right={[
+    "Claude will match it tightly",
+    "Good for strict formats — JSON shapes, tag schemas, classification labels",
+    "More tokens, more reliable",
+    "Use when downstream code depends on exact format"
+  ]}
+  takeaway="More examples = tighter conformance. Pick the minimum that gives you the reliability you need."
+/>
+
+<Callout kind="tip">
+**Pick examples that cover the tricky cases.** If your classifier has 5 categories and 2 of them are easily confused, your examples should include the *confusable* pair — Claude needs to see how to distinguish them, not how to handle the obvious ones.
+</Callout>
+
+## Exercise
+
+<Callout kind="tip">
+**Exercise 7.1 — Email classification via examples.** Use few-shot examples (not just instructions) to make Claude classify each email. The last character of Claude's reply should be the letter of the category.
+</Callout>
+
+<Playground
+  label="Exercise 7.1: Few-shot email classifier"
+  initialPrompt={`Please classify emails into the following categories, and do not include explanations:
+<categories>
+(A) Pre-sale question
+(B) Broken or defective item
+(C) Billing question
+(D) Other (please explain)
+</categories>
+
+Here are a few examples of correct answer formatting:
+<examples>
+Q: How much does it cost to buy a Mixmaster4000?
+A: The correct category is: A
+
+Q: My Mixmaster won't turn on.
+A: The correct category is: B
+
+Q: Please remove me from your mailing list.
+A: The correct category is: D
+</examples>
+
+Here is the email for you to categorize:
+<email>
+I HAVE BEEN WAITING 4 MONTHS FOR MY MONTHLY CHARGES TO END AFTER CANCELLING!!
+</email>`}
+  prefill="The correct category is:"
+/>
+
+<Quiz
+  question="You need Claude to extract company names from messy news headlines into JSON. Two approaches work — which is more reliable?"
+  choices={[
+    { text: "A 200-word description of what JSON shape you want." },
+    { text: "Three concrete (headline, JSON) examples covering simple, multi-company, and ambiguous cases.", correct: true, explanation: "Examples beat instructions for format, especially for tricky cases." },
+    { text: "Asking Claude to 'be careful and accurate'." },
+    { text: "Setting temperature to 0." }
+  ]}
+/>
+
+## What's next
+
+Next: **Avoiding hallucinations** — making Claude say "I don't know" when it doesn't.
+
+<Attribution
+  originalUrl="https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial"
+/>

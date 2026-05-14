@@ -9,7 +9,7 @@ describe("recommendPath", () => {
   it("returns prerequisites before their dependents", () => {
     const profile: UserProfile = {
       role: "developer",
-      goal: "build-agents",
+      goal: "learn-mcp",
       experience: "intermediate",
       timeBudgetMinutes: 600,
     };
@@ -27,7 +27,7 @@ describe("recommendPath", () => {
   it("respects the time budget for low budgets", () => {
     const profile: UserProfile = {
       role: "developer",
-      goal: "build-with-api",
+      goal: "ship-with-claude-code",
       experience: "beginner",
       timeBudgetMinutes: 90,
     };
@@ -39,7 +39,7 @@ describe("recommendPath", () => {
   it("filters out advanced courses for beginners by more than one level", () => {
     const profile: UserProfile = {
       role: "developer",
-      goal: "build-agents",
+      goal: "learn-mcp",
       experience: "beginner",
       timeBudgetMinutes: 9999,
     };
@@ -48,25 +48,35 @@ describe("recommendPath", () => {
     expect(advanced.length).toBe(0);
   });
 
-  it("recommends ai-fluency for general/business users", () => {
+  it("recommends Claude 101 / AI Fluency for general users wanting day-to-day usage", () => {
     const profile: UserProfile = {
-      role: "business-user",
+      role: "general",
       goal: "use-claude-day-to-day",
       experience: "beginner",
-      timeBudgetMinutes: 120,
+      timeBudgetMinutes: 180,
     };
     const path = recommendPath(profile, catalog);
-    expect(path.courses.some((c) => c.id === "ai-fluency")).toBe(true);
+    const ids = path.courses.map((c) => c.id);
+    expect(ids).toContain("claude-101");
+    expect(ids.some((id) => id.startsWith("ai-fluency") || id === "ai-capabilities-and-limitations")).toBe(true);
   });
 
-  it("prefers claude-code course when goal is ship-claude-code", () => {
+  it("puts claude-code-101 first when goal is ship-with-claude-code", () => {
     const profile: UserProfile = {
       role: "developer",
-      goal: "ship-claude-code",
+      goal: "ship-with-claude-code",
       experience: "beginner",
       timeBudgetMinutes: 120,
     };
     const path = recommendPath(profile, catalog);
-    expect(path.courses[0]?.id).toBe("claude-code");
+    const codeIdx = path.courses.findIndex((c) => c.id === "claude-code-101");
+    expect(codeIdx).toBeGreaterThanOrEqual(0);
+    // Any other Claude Code course in the path must come after claude-code-101
+    const otherCodeIdxs = path.courses
+      .map((c, i) => ({ id: c.id, i }))
+      .filter((x) => x.id !== "claude-code-101" && x.id.startsWith("claude-code"));
+    for (const { i } of otherCodeIdxs) {
+      expect(codeIdx).toBeLessThan(i);
+    }
   });
 });

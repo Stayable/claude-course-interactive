@@ -1,11 +1,11 @@
 import type { Catalog, Course, Goal, Topic, UserProfile } from "./types";
 
 const GOAL_TOPIC_AFFINITY: Record<Goal, Topic[]> = {
-  "use-claude-day-to-day": ["ai-fluency", "prompting"],
-  "build-with-api": ["api", "prompting", "tool-use"],
-  "build-agents": ["agents", "tool-use", "mcp", "prompting"],
-  "ship-claude-code": ["claude-code", "prompting"],
-  "evaluate-and-deploy": ["evals", "prompting", "api"],
+  "use-claude-day-to-day": ["claude-ai", "ai-fluency", "ai-capabilities"],
+  "ship-with-claude-code": ["claude-code", "claude-cowork", "agent-skills", "subagents"],
+  "build-with-api": ["api", "mcp"],
+  "learn-mcp": ["mcp", "api"],
+  "teach-ai-fluency": ["ai-fluency", "educators", "students"],
 };
 
 const LEVEL_RANK: Record<Course["level"], number> = {
@@ -78,20 +78,28 @@ export function recommendPath(
   let mins = 0;
 
   for (const { course } of scored) {
-    if (mins + course.durationMinutes > profile.timeBudgetMinutes && picked.length > 0) {
+    if (pickedIds.has(course.id)) continue;
+
+    const newPrereqs: Course[] = [];
+    for (const prereq of course.prerequisites) {
+      const p = catalog.courses.find((c) => c.id === prereq);
+      if (p && !pickedIds.has(p.id)) newPrereqs.push(p);
+    }
+    const marginalCost =
+      course.durationMinutes +
+      newPrereqs.reduce((s, p) => s + p.durationMinutes, 0);
+
+    if (mins + marginalCost > profile.timeBudgetMinutes && picked.length > 0) {
       continue;
     }
-    if (pickedIds.has(course.id)) continue;
+
     picked.push(course);
     pickedIds.add(course.id);
     mins += course.durationMinutes;
-    for (const prereq of course.prerequisites) {
-      const p = catalog.courses.find((c) => c.id === prereq);
-      if (p && !pickedIds.has(p.id)) {
-        picked.push(p);
-        pickedIds.add(p.id);
-        mins += p.durationMinutes;
-      }
+    for (const p of newPrereqs) {
+      picked.push(p);
+      pickedIds.add(p.id);
+      mins += p.durationMinutes;
     }
   }
 
@@ -110,10 +118,10 @@ function buildRationale(profile: UserProfile, courses: Course[]): string {
   }
   const goalText: Record<Goal, string> = {
     "use-claude-day-to-day": "use Claude effectively day to day",
+    "ship-with-claude-code": "ship code with Claude Code",
     "build-with-api": "build with the Claude API",
-    "build-agents": "build agents with Claude",
-    "ship-claude-code": "ship code with Claude Code",
-    "evaluate-and-deploy": "evaluate and deploy Claude in production",
+    "learn-mcp": "learn the Model Context Protocol",
+    "teach-ai-fluency": "teach AI fluency",
   };
   return `Based on your goal to ${goalText[profile.goal]} as a ${profile.role} at the ${profile.experience} level, this path covers prerequisites first and builds toward your goal.`;
 }

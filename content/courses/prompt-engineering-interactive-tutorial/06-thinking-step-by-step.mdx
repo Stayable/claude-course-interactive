@@ -1,0 +1,116 @@
+# Chapter 6: Precognition — thinking step by step
+
+If a colleague asked you a hard question and demanded an answer in one breath, you'd do worse than if they let you think first. Claude is the same. **Letting Claude reason out loud before committing to an answer reliably raises accuracy** on anything that isn't pure recall.
+
+The catch: **thinking only counts when it's out loud**. You can't ask Claude to "think silently and only output the answer." If the reasoning isn't in the response, it didn't happen.
+
+## A sentiment example
+
+Here's a review where the second sentence undercuts the first. To a human reader, it's clearly sarcastic.
+
+<Playground
+  label="Direct ask — Claude often misses the sarcasm"
+  initialPrompt={`Is this movie review sentiment positive or negative?
+
+This movie blew my mind with its freshness and originality. In totally unrelated news, I have been living under a rock since the year 1900.`}
+/>
+
+Now the same question, but Claude is told to think first.
+
+<Playground
+  label="With explicit thinking"
+  system="You are a savvy reader of movie reviews."
+  initialPrompt={`Is this review sentiment positive or negative? First, write the best arguments for each side in <positive-argument> and <negative-argument> XML tags, then answer.
+
+This movie blew my mind with its freshness and originality. In totally unrelated news, I have been living under a rock since 1900.`}
+/>
+
+The accuracy lift comes from Claude *writing* the arguments first. The XML tags are scaffolding that forces the work to happen.
+
+<Callout kind="warn">
+**Order matters.** Claude is mildly biased toward the *second* of two options. If you list "positive" first and "negative" second, you'll tilt toward negative — and vice versa. For high-stakes classification, run both orderings.
+</Callout>
+
+## When Claude doesn't know, thinking finds out
+
+Step-by-step thinking also helps on tasks where Claude *could* know the answer but doesn't pull it on the first pass.
+
+<Playground
+  label="Direct ask — Claude may pick the wrong movie"
+  initialPrompt="Name a famous movie starring an actor who was born in the year 1956."
+/>
+
+<Playground
+  label="With brainstorm — much more likely to land"
+  initialPrompt="Name a famous movie starring an actor who was born in the year 1956. First brainstorm about some actors and their birth years in <brainstorm> tags, then give your answer."
+/>
+
+The brainstorm makes Claude enumerate candidates with their birth years before committing — and it catches its own mistakes.
+
+## The mental model
+
+<Diagram
+  takeaway="Reasoning written into the response is reasoning Claude can use. Reasoning you 'asked for silently' didn't happen."
+  chart={`flowchart LR
+    Q[Hard question] --> D{Asked to think out loud?}
+    D -->|no| Fast[Fast guess<br/>often wrong]
+    D -->|yes — write to a tag| Think[Think in tag]
+    Think --> Better[Answer<br/>informed by thinking]`}
+/>
+
+## Exercises
+
+<Callout kind="tip">
+**Exercise 6.1 — Classifying emails.** Get Claude to classify each email into one of four categories: (A) pre-sale question, (B) broken/defective item, (C) billing question, (D) other. The output should start with `(letter) Category Name` — like `(B) Broken or defective item`.
+
+Try it with each of these four emails:
+1. *"Hi -- My Mixmaster4000 is producing a strange noise when I operate it. It also smells a bit smoky..."* → B
+2. *"Can I use my Mixmaster 4000 to mix paint, or is it only meant for food?"* → A or D
+3. *"I HAVE BEEN WAITING 4 MONTHS FOR MY MONTHLY CHARGES TO END AFTER CANCELLING!!"* → C
+4. *"How did I get here I am not good with computer. Halp."* → D
+</Callout>
+
+<Playground
+  label="Exercise 6.1: Email classifier (start with one email)"
+  initialPrompt={`Please classify this email into one of the following categories. Reply with only the category letter and name, like "(A) Pre-sale question". No preamble.
+
+<categories>
+(A) Pre-sale question
+(B) Broken or defective item
+(C) Billing question
+(D) Other (please explain)
+</categories>
+
+<email>
+Hi -- My Mixmaster4000 is producing a strange noise when I operate it. It also smells a bit smoky and plasticky, like burning electronics. I need a replacement.
+</email>`}
+/>
+
+<Callout kind="tip">
+**Exercise 6.2 — Wrap the answer in tags.** Refine the classifier so Claude wraps only the letter in `<answer>` tags — like `<answer>B</answer>`. Combine with prefilling for near-deterministic output.
+</Callout>
+
+<Playground
+  label="Exercise 6.2: Letter-only in <answer> tags"
+  prefill="<answer>"
+  initialPrompt={`Classify this email and respond only with the category letter inside <answer></answer> tags.
+
+<categories>
+(A) Pre-sale question
+(B) Broken or defective item
+(C) Billing question
+(D) Other (please explain)
+</categories>
+
+<email>
+I HAVE BEEN WAITING 4 MONTHS FOR MY MONTHLY CHARGES TO END AFTER CANCELLING!!
+</email>`}
+/>
+
+## What's next
+
+Next: **Using examples (few-shot prompting)** — when one good example beats five paragraphs of instructions.
+
+<Attribution
+  originalUrl="https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial"
+/>

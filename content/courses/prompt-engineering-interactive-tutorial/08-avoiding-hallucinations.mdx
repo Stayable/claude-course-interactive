@@ -1,0 +1,116 @@
+# Chapter 8: Avoiding hallucinations
+
+Claude sometimes confidently states things that aren't true. This is **hallucination**: a plausible-sounding answer the model fills in to be helpful, when it doesn't actually know.
+
+The two highest-leverage fixes:
+
+1. **Give Claude an out.** Tell it that "I don't know" is an acceptable answer.
+2. **Ask it to find evidence first.** Quote the source material before answering.
+
+## The "give Claude an out" technique
+
+By default, Claude tries to be helpful and complete its answer — even when the right move is to decline. Adding a single sentence often fixes this.
+
+<Playground
+  label="Without an out — Claude may invent facts"
+  initialPrompt="Who is the heaviest hippo of all time?"
+/>
+
+<Playground
+  label="With an out — Claude is allowed to decline"
+  initialPrompt="Who is the heaviest hippo of all time? Only answer if you know the answer with certainty. Otherwise, say 'I don't know.'"
+/>
+
+That one sentence — *"Only answer if you know with certainty. Otherwise, say I don't know"* — is one of the highest ROI additions you can make to a fact-retrieval prompt.
+
+## The "find evidence first" technique
+
+When Claude has been given source material (a document, a transcript, a search result), it can still hallucinate by latching onto something that *sounds* relevant. The fix is to make Claude *quote* the source before answering.
+
+<Compare
+  leftLabel="❌ Loose grounding"
+  rightLabel="✅ Forced quotation"
+  left={[
+    "'Answer this question using the document below.'",
+    "'Summarize the relevant parts.'",
+    "Open question with the doc attached"
+  ]}
+  right={[
+    "'First, extract exact quotes relevant to the question into <quotes> tags. Then answer using only those quotes. If no relevant quotes exist, say so.'",
+    "'For every claim in your answer, cite the sentence from the document it came from.'",
+    "Structured: quotes → answer → check"
+  ]}
+  takeaway="The hallucination fix isn't 'be more careful' — it's 'show your work.'"
+/>
+
+A template you can reuse:
+
+```
+Use the document below to answer the question.
+
+<document>
+{document}
+</document>
+
+First, extract any quotes from the document relevant to the question
+into <quotes></quotes> tags. If there are no relevant quotes, write
+"no relevant quotes found".
+
+Then, only if the quotes support an answer, write your answer in
+<answer></answer> tags. If they don't, write that you can't answer
+from the provided document.
+
+Question: {question}
+```
+
+## A bonus knob: temperature
+
+Lowering the `temperature` parameter (toward 0) makes Claude's responses more consistent and less prone to creative leaps. For fact-retrieval or classification, **temperature 0 is almost always right**. Save higher temperatures for creative writing, brainstorming, and variation.
+
+## Exercises
+
+<Callout kind="tip">
+**Exercise 8.1 — Don't invent an album.** "Renaissance" is Beyoncé's **seventh** studio album, not her eighth. The prompt below makes Claude hallucinate a non-existent eighth album. Fix it by giving Claude an out. The corrected answer should include "I don't" or "Unfortunately" — i.e., a decline.
+</Callout>
+
+<Playground
+  label="Exercise 8.1: Beyoncé hallucination"
+  initialPrompt="What was the name of the the 8th album that Beyonce released?"
+/>
+
+<Quiz
+  question="Which single addition is most likely to stop the Beyoncé hallucination?"
+  choices={[
+    { text: "'Please answer carefully.'" },
+    { text: "'Only answer if you are certain. If you don't know or aren't sure the album exists, say so.'", correct: true, explanation: "Giving Claude explicit permission to say 'I don't know' is the cleanest fix." },
+    { text: "'Set temperature higher.'", explanation: "Higher temperature makes hallucinations more likely, not less." },
+    { text: "'Be more accurate.'" }
+  ]}
+/>
+
+<Callout kind="tip">
+**Exercise 8.2 — Cite the document.** When given a long document with distractor info, Claude often grabs the wrong number. The fix is to make Claude quote relevant passages first. Try the template above on a document of your own and confirm the answer's claims appear in the quotes.
+</Callout>
+
+<Playground
+  label="Exercise 8.2: Force citations"
+  initialPrompt={`Use the document below to answer the question.
+
+<document>
+Acme Corp's subscriber base grew from 2 million in 2018 to 98 million in 2020. Their competitor Beta Inc., often mentioned alongside Acme, grew from 50 million to 75 million in the same period. Analysts note that Beta's growth was steady while Acme's was explosive.
+</document>
+
+First, extract quotes from the document relevant to the question into <quotes></quotes> tags. If none are relevant, write "no relevant quotes found."
+
+Then answer in <answer></answer> tags using only those quotes. If they don't support an answer, say so.
+
+Question: By what multiple did Acme Corp's subscriber base grow between 2018 and 2020?`}
+/>
+
+## What's next
+
+Next: **Complex prompts from scratch** — the 10-element template that pulls everything together.
+
+<Attribution
+  originalUrl="https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial"
+/>

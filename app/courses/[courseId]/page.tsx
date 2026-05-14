@@ -19,7 +19,7 @@ export default async function CoursePage({ params }: Params) {
       <p className="text-sm text-ink-400">
         <Link href="/courses" className="hover:text-accent">All courses</Link>
         {" · "}
-        <a href={course.url} className="hover:text-accent">Original on claude.com</a>
+        <a href={course.url} className="hover:text-accent">Original on Skilljar</a>
       </p>
       <h1>{course.title}</h1>
       <p className="text-sm text-ink-400">

@@ -1,0 +1,101 @@
+# Chapter 2: Being clear and direct
+
+Claude responds best to **clear and direct** instructions. Think of Claude like a smart new colleague who's never done the task before. The more concretely you explain what you want, the better the answer.
+
+**The Golden Rule of Clear Prompting:**
+
+> Show your prompt to a colleague and have them try to follow it. If they're confused, Claude will be too.
+
+## Same task, two prompts
+
+<Compare
+  leftLabel="❌ Vague"
+  rightLabel="✅ Clear"
+  left={[
+    "'Write a haiku about robots.' (often gets 'Here is a haiku:' preamble)",
+    "'Who's the best basketball player?' (Claude hedges, lists 3-4 names)",
+    "'Improve this email.' (vague; what kind of improvement?)"
+  ]}
+  right={[
+    "'Write a haiku about robots. Skip the preamble; go straight into the poem.'",
+    "'Who's the best basketball player? If you absolutely had to pick one, who would it be?'",
+    "'Tighten this email by 30%. Keep the ask in the last line. Drop the apologies.'"
+  ]}
+  takeaway="Being clear is mostly being specific about what you don't want."
+/>
+
+## Try the difference
+
+<Playground
+  label="Vague: just a haiku request"
+  initialPrompt="Write a haiku about robots."
+/>
+
+<Playground
+  label="Clear: same task, no preamble"
+  initialPrompt="Write a haiku about robots. Skip the preamble; go straight into the poem."
+/>
+
+Same task. The second answer goes straight to the poem.
+
+## Forcing a decision
+
+When you want Claude to commit instead of hedging, *tell it to commit*.
+
+<Playground
+  label="Hedging by default"
+  initialPrompt="Who is the best basketball player of all time?"
+/>
+
+<Playground
+  label="Force a single answer"
+  initialPrompt="Who is the best basketball player of all time? Yes, there are differing opinions, but if you absolutely had to pick one player, who would it be?"
+/>
+
+## Exercises
+
+<Callout kind="tip">
+**Exercise 2.1 — Spanish.** Use the **system prompt** to make Claude respond in Spanish. The output should contain the word "hola".
+</Callout>
+
+<Playground
+  label="Exercise 2.1: Switch language via system prompt"
+  system="[Replace this — make Claude respond in Spanish]"
+  initialPrompt="Hello Claude, how are you?"
+/>
+
+<Callout kind="tip">
+**Exercise 2.2 — One player only.** Modify the prompt so Claude responds with exactly `Michael Jordan` — no other words, no punctuation, no preamble.
+</Callout>
+
+<Playground
+  label="Exercise 2.2: One answer only"
+  initialPrompt="[Replace this — get Claude to respond with only 'Michael Jordan' and nothing else]"
+/>
+
+<Quiz
+  question="Which prompt is most likely to get Claude to reply with exactly 'Michael Jordan' and nothing else?"
+  choices={[
+    { text: "'Who is the best basketball player of all time?'" },
+    { text: "'Pick one: greatest basketball player. Reply with just the name. No preamble, no punctuation, no explanation.'", correct: true, explanation: "Spells out the format and forbids extras." },
+    { text: "'In your opinion, considering all factors, who...'" },
+    { text: "'You may want to consider Michael Jordan.'" }
+  ]}
+/>
+
+<Callout kind="tip">
+**Exercise 2.3 — Write a story.** Get Claude to write a response of **800+ words**. Claude isn't great at counting, so you may need to overshoot. Try asking for a multi-chapter story or specifying many distinct sections.
+</Callout>
+
+<Playground
+  label="Exercise 2.3: Long response"
+  initialPrompt="[Replace this — get a response over 800 words]"
+/>
+
+## What's next
+
+Next: **Assigning roles** — how a single line in the system prompt changes the entire reply.
+
+<Attribution
+  originalUrl="https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial"
+/>

@@ -1,0 +1,111 @@
+# Appendix 10.2: Tool use
+
+Tool use (also called *function calling*) lets Claude reach out to your code. The mechanics are simpler than they sound: Claude doesn't actually run anything itself. **You** run the tool when Claude asks for it, and you feed the result back in.
+
+<Callout kind="warn">
+The technique in this appendix uses the **legacy XML-based** tool format (`<function_calls>` blocks). The current Anthropic API has a **native tool-use API** with structured `tool_use` blocks — cleaner, more reliable, and what you should use in new code. Anthropic's dedicated **Tool Use** course covers the modern format. This appendix is included for completeness on the prompt-engineering foundations.
+</Callout>
+
+## The loop
+
+<Diagram
+  takeaway="Claude says what tool it wants. You run it. You send the result back. Claude continues. Loop until Claude is done."
+  chart={`sequenceDiagram
+    participant U as Your app
+    participant C as Claude
+    participant T as Tool (your code)
+    U->>C: messages + tool definitions
+    C-->>U: stop_reason=tool_use<br/>(wants to call tool X)
+    U->>T: run tool X with the args Claude gave
+    T-->>U: result
+    U->>C: append tool_result, send again
+    C-->>U: stop_reason=end_turn<br/>(final answer)`}
+/>
+
+The two `stop_reason` values that matter:
+
+- **`tool_use`** — Claude wants you to run a tool. Look at the request, run it, append a `tool_result` to the messages list, send again.
+- **`end_turn`** — Claude is done. Show the message.
+
+## What tools are good for
+
+- **Math.** Claude is unreliable at arithmetic; a calculator tool is a one-line fix.
+- **Live data.** Stock prices, weather, today's news, your CRM.
+- **Actions.** Sending an email, creating a ticket, posting to Slack — anything with a side effect.
+- **Retrieval.** Searching a database, looking up a customer record, hitting an internal API.
+
+## Defining a tool
+
+A tool definition is, at minimum, three things:
+
+```json
+{
+  "name": "get_weather",
+  "description": "Get current weather for a city. Returns temperature in Celsius and conditions.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "city": {
+        "type": "string",
+        "description": "City name, e.g. 'Boca Raton'"
+      }
+    },
+    "required": ["city"]
+  }
+}
+```
+
+The **description** is doing real work — Claude reads it and decides when to call the tool. Treat descriptions like documentation, not labels. Bad descriptions cause Claude to skip the tool when it should use it, or to call it for the wrong things.
+
+## A worked example in prose
+
+User asks: *"What's the weather in Boca Raton right now?"*
+
+1. You send Claude the user message plus the `get_weather` tool definition.
+2. Claude replies with `stop_reason: "tool_use"` and a `tool_use` block: `{name: "get_weather", input: {city: "Boca Raton"}}`.
+3. Your code runs `getWeather("Boca Raton")` — that's *your* function, not Claude's. Suppose it returns `{temp_c: 28, conditions: "humid, partly cloudy"}`.
+4. You append a `tool_result` block to the messages list with that data and call Claude again.
+5. Claude replies with `stop_reason: "end_turn"`: *"It's 28°C and humid in Boca Raton — partly cloudy."*
+
+## What can go wrong
+
+<Compare
+  leftLabel="Common pitfalls"
+  rightLabel="What to do instead"
+  left={[
+    "Tool descriptions like 'gets data'",
+    "Tools that overlap (when both work, Claude is unsure which to call)",
+    "Forgetting to handle the loop — assuming one call is enough",
+    "Letting tools take destructive actions silently"
+  ]}
+  right={[
+    "Descriptions that name the inputs, outputs, and when to call it",
+    "One tool per distinct job; or a wrapper tool that disambiguates",
+    "Loop until stop_reason is end_turn",
+    "Confirm in-app before destructive actions; or build read-only tools and let humans do the writes"
+  ]}
+  takeaway="Treat tools like a tiny SDK you're handing Claude. Names and descriptions matter as much as the code."
+/>
+
+## Multiple tools
+
+You can give Claude more than one tool. It will pick the right one — or call several in sequence. A small "menu" you might give a customer-service bot:
+
+- `get_customer(customer_id)` — look up a customer record
+- `get_order(order_id)` — look up an order
+- `create_refund(order_id, amount, reason)` — initiate a refund (with a confirmation step)
+- `escalate_to_human(reason)` — route to a person
+
+Claude reads all four descriptions and picks the right one for each turn.
+
+## Where to go from here
+
+The **Tool Use** course on GitHub (one of the five we ported) covers the modern, native tool-use format end-to-end — schemas, parallel tool calls, debugging when Claude picks the wrong tool. The **MCP** courses go a level above: how to expose tools as reusable services that any Claude client can connect to.
+
+## What's next
+
+Next: **Search & retrieval** — when "the right answer" lives in a corpus, not in Claude's training data.
+
+<Attribution
+  originalUrl="https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial"
+/>

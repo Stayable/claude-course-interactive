@@ -1,0 +1,104 @@
+# Your first conversation with Claude
+
+A conversation with Claude is a thread: messages from you, replies from Claude, back and forth. The thread *remembers* itself — Claude can see everything you've said earlier in the same conversation. The thread does **not** remember itself across separate chats. Open a new chat and you're starting clean.
+
+That single rule shapes how to use it well.
+
+## The shape of one turn
+
+<Diagram
+  takeaway="Each turn is your message, Claude's reply, and the whole thread carried forward into the next turn."
+  chart={`sequenceDiagram
+    participant You
+    participant C as Claude
+    You->>C: Question or task
+    C-->>You: Reply (streamed)
+    Note over You,C: Thread now includes both messages
+    You->>C: Follow-up (Claude can see the prior turn)
+    C-->>You: Reply, with the prior turn as context`}
+/>
+
+## A first prompt that almost always works
+
+Three pieces, in this order:
+
+1. **What you want** — say it directly. *"Draft a polite email to my landlord asking to fix the AC."*
+2. **Who it's for** — *"My landlord is friendly but not great with email."*
+3. **How long / what shape** — *"Under 100 words. One paragraph. End with a clear ask."*
+
+That's it. Most failed prompts are just missing one of those three.
+
+<TypingDemo
+  prompt={`Draft a polite email to my landlord asking to fix the AC.
+My landlord is friendly but not great with email.
+Under 100 words. One paragraph. End with a clear ask.`}
+  response={`Hi Mark — the AC in the unit cut out yesterday afternoon and the place is sitting in the high 80s. I've tried the breaker and the thermostat reset, no luck. Could you send someone over this week to take a look, or let me know if I should call the building's HVAC contractor directly? Happy to be home anytime Wednesday or Thursday. Thanks.`}
+/>
+
+## When it doesn't land the first time
+
+You don't fix a prompt by getting cleverer — you fix it by being more specific about what didn't work. Three moves that fix most disappointments:
+
+<Compare
+  leftLabel="Instead of starting over"
+  rightLabel="Tell Claude what to change"
+  left={[
+    "Throwing the prompt away and rewriting from scratch",
+    "Asking 'do better' or 'try again'",
+    "Adding adjectives like 'better' or 'more professional'"
+  ]}
+  right={[
+    "'Make it shorter — half the length.'",
+    "'Drop the apology. Open with the ask.'",
+    "'Sound less corporate. The way I'd actually text a friend.'"
+  ]}
+  takeaway="Be specific about the gap between what you got and what you wanted."
+/>
+
+## When to start a fresh chat
+
+A new conversation is a *clean room*. Use a fresh chat when:
+
+- You're switching tasks entirely (drafting an email → debugging a spreadsheet)
+- The current thread is long and Claude is getting distracted by earlier context
+- You want to share the conversation with someone and don't want them seeing the earlier stuff
+- You think Claude has "locked in" on a wrong assumption and you can't shake it loose
+
+A long thread isn't always bad — *related* follow-ups are exactly what threads are for. Switching topics inside one thread is what causes most "Claude got worse" feelings.
+
+## Check yourself
+
+<Quiz
+  question="You asked Claude to draft an email. It came back too long. What's the fastest fix?"
+  choices={[
+    { text: "Start a new chat and rewrite the prompt from scratch." },
+    { text: "Reply in the same thread: 'Cut this to under 80 words. Keep the ask, drop the pleasantries.'", correct: true, explanation: "You don't lose context, and you're being specific about the change." },
+    { text: "Reply 'make it better'.", explanation: "Claude can't tell what 'better' means here." },
+    { text: "Wait a day and try again." }
+  ]}
+/>
+
+<Quiz
+  question="Which of these does Claude carry between separate chats by default?"
+  choices={[
+    { text: "Nothing — each new chat starts fresh.", correct: true, explanation: "Projects can pin context across chats, but a plain new chat is clean." },
+    { text: "Everything you've ever said to it." },
+    { text: "Just your name." },
+    { text: "The last 24 hours of messages." }
+  ]}
+/>
+
+## Try it
+
+Practice the three-piece prompt below. Edit it, run it, then follow up to tighten the result.
+
+<Playground
+  label="Three-piece prompt"
+  initialPrompt={`Write a 3-sentence thank-you note from me to a coworker named Priya who covered for me when I was sick last Thursday.
+Tone: warm but not gushing — we're friendly colleagues, not close friends.
+Avoid generic phrases like "I really appreciate it."`}
+/>
+
+## What's next
+
+Next: **Getting better results** — patterns that work no matter what you're asking for.

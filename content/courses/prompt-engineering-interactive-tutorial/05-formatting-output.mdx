@@ -1,0 +1,108 @@
+# Chapter 5: Formatting output & speaking for Claude
+
+Two related techniques that often make the difference between a prompt that *works in a demo* and one that *works in production*:
+
+1. **Ask Claude to wrap its output in XML tags** so you can extract just the answer with a regex.
+2. **Speak for Claude** — start its reply with a few characters, and it'll continue from there.
+
+## Wrap the output in tags
+
+If you ask for a haiku, you'll often get "Here's a haiku for you:" before the poem. That's hard to extract. Ask for the poem inside `<haiku>` tags instead.
+
+<Playground
+  label="Output in <haiku> tags"
+  initialPrompt="Please write a haiku about Rabbit. Put it in <haiku> tags."
+/>
+
+Now your extraction code is one regex: `/<haiku>(.*?)<\/haiku>/s`.
+
+## Speaking for Claude (prefill)
+
+You can put text in Claude's *assistant* turn, and the API will treat it as if Claude already said that — and continue from there. This is the single best technique for forcing a specific output shape.
+
+<Playground
+  label="Prefill with the opening tag — Claude continues inside it"
+  prefill="<haiku>"
+  initialPrompt="Please write a haiku about Cat. Put it in <haiku> tags."
+/>
+
+Notice: no "Here's your haiku!" preamble. Claude continues directly from `<haiku>`.
+
+<Callout kind="tip">
+The prefill text appears greyed-out in the output panel above. The streaming text that follows is what Claude added.
+</Callout>
+
+## Prefill for JSON
+
+Prefilling `{` forces Claude to start with a JSON object. Near-deterministic.
+
+<Playground
+  label="JSON output via prefill"
+  prefill="{"
+  initialPrompt={`Please write a haiku about Cat. Use JSON format with the keys as "first_line", "second_line", and "third_line".`}
+/>
+
+You'll need to prepend the `{` back when parsing, since the API streams Claude's continuation only.
+
+## Multiple variables + custom tags
+
+XML tags work even when the tag name itself is dynamic. You can use the same variable in the prompt and the prefill.
+
+<Playground
+  label="Variable tag names"
+  prefill="<olde_english_email>"
+  initialPrompt={`Hey Claude. Here is an email: <email>Hi Zack, just pinging you for a quick update on that prompt you were supposed to write.</email>. Make this email more olde english. Write the new version in <olde_english_email> XML tags.`}
+/>
+
+## A bonus technique
+
+If you're calling the API directly, pass the **closing tag** (e.g. `</haiku>`) as a `stop_sequences` value. Claude will stop generating the moment it emits the tag, saving tokens and latency by skipping any concluding remarks.
+
+## Exercises
+
+<Callout kind="tip">
+**Exercise 5.1 — Steph Curry GOAT.** Without changing the user prompt, use **prefill** to make Claude argue that Stephen Curry is the greatest basketball player. The output should contain "Warrior".
+</Callout>
+
+<Playground
+  label="Exercise 5.1: Steer with prefill"
+  prefill="[Replace this prefill to force Claude toward Steph Curry]"
+  initialPrompt="Who is the best basketball player of all time? Please choose one specific player."
+/>
+
+<Quiz
+  question="What's a strong prefill for Exercise 5.1?"
+  choices={[
+    { text: "An empty string." },
+    { text: "'Stephen Curry is the best player ever. Here are three reasons why. 1:'", correct: true, explanation: "By prefilling the assistant turn with a definitive opening + a list start, Claude is committed to continuing the argument." },
+    { text: "'Michael Jordan is the GOAT.'" },
+    { text: "'I cannot answer that question.'" }
+  ]}
+/>
+
+<Callout kind="tip">
+**Exercise 5.2 — Two haikus.** Modify the prompt so Claude writes **two** haikus about cats, each clearly delimited. The output should have multiple `<haiku>` tags.
+</Callout>
+
+<Playground
+  label="Exercise 5.2: Two haikus"
+  prefill="<haiku>"
+  initialPrompt="Please write a haiku about cats. Put it in <haiku> tags."
+/>
+
+<Callout kind="tip">
+**Exercise 5.3 — Two haikus, two animals.** Use `{ANIMAL1}` and `{ANIMAL2}` placeholders so the same template can produce two haikus about any pair of animals (e.g. Cat & Dog).
+</Callout>
+
+<Playground
+  label="Exercise 5.3: Templated two-animal haiku"
+  initialPrompt="[Replace this with a template using {ANIMAL1} and {ANIMAL2}, then substitute in real animal names before running]"
+/>
+
+## What's next
+
+Next: **Precognition** — letting Claude think step-by-step out loud, the single most reliable accuracy lift.
+
+<Attribution
+  originalUrl="https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial"
+/>

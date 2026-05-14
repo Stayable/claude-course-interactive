@@ -1,0 +1,98 @@
+# What is Claude?
+
+<Reveal stepMs={70}>
+  <span>Claude&nbsp;</span>
+  <span>is&nbsp;</span>
+  <span>an&nbsp;</span>
+  <span>AI&nbsp;</span>
+  <span>assistant&nbsp;</span>
+  <span>made&nbsp;</span>
+  <span>by&nbsp;</span>
+  <span>Anthropic.</span>
+</Reveal>
+
+You talk to it like you'd talk to a thoughtful colleague — in plain language — and it answers back in plain language. The thing doing the answering is a *model*: a very large neural network trained on text. You don't need to know how the network works to use Claude well. You just need to know what to ask, and how to read what comes back.
+
+<Callout kind="tip">
+If you've used a chatbot before, you already know the basic shape: you type, it replies. The difference with Claude is how far you can push that conversation — long documents, real code, multi-step thinking — without it falling over.
+</Callout>
+
+## Where Claude lives
+
+Claude shows up in a few places. Each one is the same model underneath, but the surface is shaped for a different kind of work.
+
+<SurfaceMap takeaway="Same Claude, different shells. Pick the surface that matches the work." />
+
+You can start anywhere. Most people start in **Chat** (claude.ai in a browser), graduate to the **Desktop app** when they're using it daily, and step into **Cowork** or **Code** when they want Claude editing real files.
+
+## What a reply looks like
+
+Claude doesn't answer all at once — it *streams*, one word at a time, so you can read along as it thinks. That little blinking cursor below is showing the same thing you'll see for real on claude.ai.
+
+<TypingDemo
+  prompt="Explain what a large language model is, in one paragraph, to a curious 10-year-old."
+  response={`A large language model is like a very, very well-read friend. It has read more books and websites than any person could in a lifetime, and it has gotten good at one specific game: guessing what word comes next.
+
+When you ask it a question, it doesn't look the answer up in a database. It writes one word, then guesses the next, then the next — and the answers come out shaped like the things it has seen humans write. That's why it sounds natural. It's also why it can sometimes sound confident about things that aren't quite right.`}
+/>
+
+## What it's good at — and where to be careful
+
+Claude is strong at language tasks: anything that's mostly *reading*, *writing*, or *thinking out loud about text you've given it*. It's less reliable when the task requires fresh information from the outside world, or when small errors carry big consequences.
+
+<Compare
+  leftLabel="Claude is good at"
+  rightLabel="Be careful when…"
+  left={[
+    "Drafting emails, posts, reports",
+    "Summarizing long documents you paste in",
+    "Answering questions about content you give it",
+    "Writing and reviewing code",
+    "Walking through reasoning step by step",
+    "Translating, rephrasing, simplifying"
+  ]}
+  right={[
+    "You need today's news, prices, or scores — it doesn't browse by default",
+    "An exact citation matters — verify the source yourself",
+    "The task is high-stakes (legal, medical, financial) without a human checking",
+    "You want it to remember last week's chat — each new conversation starts fresh",
+    "It sounds confident — confidence isn't proof"
+  ]}
+  takeaway="Use Claude where the work is text-shaped. Bring outside facts and final judgment yourself."
+/>
+
+## Check yourself
+
+<Quiz
+  question="Which of these is Claude best suited for, out of the box?"
+  choices={[
+    { text: "Looking up today's weather in Boca Raton.", explanation: "Claude doesn't browse the web by default. It needs a tool for that." },
+    { text: "Summarizing a 30-page report you paste into the chat.", correct: true, explanation: "Text in front of it is exactly where Claude shines." },
+    { text: "Remembering what you talked about in last Tuesday's chat.", explanation: "Each conversation starts fresh unless you're using a Project or paste prior context in." },
+    { text: "Giving a guaranteed-accurate medical diagnosis.", explanation: "Claude can discuss medicine, but it isn't a replacement for a clinician." }
+  ]}
+/>
+
+<Quiz
+  question="Pick the surfaces where Claude is the same model underneath."
+  multi
+  choices={[
+    { text: "claude.ai chat in a browser", correct: true },
+    { text: "The Claude desktop app", correct: true },
+    { text: "Cowork (file-aware mode in the desktop app)", correct: true },
+    { text: "Claude Code in your terminal", correct: true }
+  ]}
+/>
+
+## Try it
+
+You don't need an account to play below — this lesson's playground is wired to the real API on the server, so what you type goes to Claude. Start with something small.
+
+<Playground
+  label="Your first prompt"
+  initialPrompt={`Explain, in 3 short bullets, what makes a "large language model" different from a search engine. Plain language — no jargon.`}
+/>
+
+## What's next
+
+Next lesson: **Your first conversation with Claude** — how to phrase a request so it lands the first time, and what to do when it doesn't.

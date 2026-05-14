@@ -7,18 +7,19 @@ import { PathMap } from "@/components/PathMap";
 import type { Audience, Goal, Level, UserProfile } from "@/lib/types";
 
 const ROLES: { value: Audience; label: string }[] = [
+  { value: "general", label: "Curious learner / general user" },
   { value: "developer", label: "Developer" },
-  { value: "technical-builder", label: "Technical builder (PM, designer-who-codes)" },
-  { value: "business-user", label: "Business user" },
-  { value: "general", label: "Curious learner" },
+  { value: "education", label: "Educator or student" },
+  { value: "business", label: "Small business owner" },
+  { value: "nonprofit", label: "Nonprofit team member" },
 ];
 
 const GOALS: { value: Goal; label: string }[] = [
   { value: "use-claude-day-to-day", label: "Use Claude better day to day" },
+  { value: "ship-with-claude-code", label: "Ship code with Claude Code" },
   { value: "build-with-api", label: "Build with the Claude API" },
-  { value: "build-agents", label: "Build agents" },
-  { value: "ship-claude-code", label: "Ship code with Claude Code" },
-  { value: "evaluate-and-deploy", label: "Evaluate and deploy in production" },
+  { value: "learn-mcp", label: "Learn the Model Context Protocol" },
+  { value: "teach-ai-fluency", label: "Teach AI fluency" },
 ];
 
 const LEVELS: { value: Level; label: string }[] = [

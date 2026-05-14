@@ -1,17 +1,12 @@
-// Production Prisma schema (Postgres / Neon).
-// Local SQLite version lives at prisma/schema.local.prisma.
-//
-// Production:  npm run db:push        (Postgres via DATABASE_URL)
-// Local dev:   npm run db:push:local  (SQLite via file:./dev.db)
-//
-// Keep the two schemas in sync. Identical models, only the datasource provider differs.
+// Prisma schema. SQLite for local dev, swap provider to "postgresql" for prod.
+// Run: pnpm prisma db push
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
